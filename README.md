@@ -1,6 +1,6 @@
 # Truong dai hoc Nha Trang (NTU)
 ## Day la noi luu tru bai tap cac khoa hoc cua NTU
-Muc dich tao repo chi de luu tru code, de thi
+Muc dich tao repo chi de luu tru code, de thi cung nhu luyen tap cach dung Git va Github
 ## Danh sach bao gom:
 1. Nhap mon lap trinh
 2. Ki thuat lap trinh
