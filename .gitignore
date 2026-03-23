@@ -8,3 +8,7 @@
 !*.cs
 
 !*.sql
+
+!.gitignore
+!*.md
+
