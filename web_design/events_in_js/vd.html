@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="button" value="Click me" id="clickme" />
+    <script>
+      document.getElementById("clickme").onclick = function () {
+        alert("Ban vua moi click vao nut nay!");
+      };
+    </script>
+    <hr />
+    <ul>
+      <li><a href="#" onclick="do_something()">Tin cong nghe</a></li>
+      <li><a href="#" onclick="do_something()">Tin trong nuoc</a></li>
+      <li><a href="#" onclick="do_something()">Tin quoc te</a></li>
+    </ul>
+    <style>
+      ul li {
+        list-style-type: none;
+      }
+
+      ul li a {
+        text-decoration: none;
+        color: rgb(0, 61, 36);
+      }
+    </style>
+    <script>
+      function do_something() {
+        alert("Ban vua moi click vao nut nay!");
+      }
+    </script>
+  </body>
+</html>

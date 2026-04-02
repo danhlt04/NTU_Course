@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="button" id="clickme" value="Click me" />
+    <script>
+      var btn = document.getElementById("clickme");
+      btn.onclick = function () {
+        alert("Ban vua moi click vao nut nay!");
+      };
+    </script>
+    <hr>
+    <ul>
+      <li><a href="#" class="show">Tin cong nghe</a></li>
+      <li><a href="#">Tin trong nuoc</a></li>
+      <li><a href="#" class="show">Tin quoc te</a></li>
+    </ul>
+    <style>
+      ul li {
+        list-style-type: none;
+      }
+
+      ul li a {
+        text-decoration: none;
+        color: rgb(0, 61, 36);
+      }
+    </style>
+    <script language="javascript">
+      var a_list = document.getElementsByClassName("show");
+      for (var i = 0; i < a_list.length; i++) {
+        a_list[i].onclick = function () {
+          alert("Ban vua moi click vao nut nay!");
+          return false;
+        };
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" id="txt-val" value="" />
+    <div id="result"></div>
+    <script language="javascript">
+      // Lấy đối tượng
+      var input = document.getElementById("txt-val");
+
+      // Thêm sự kiện cho đối tượng
+      input.addEventListener("keyup", function () {
+        // Gán giá trị vào div
+        document.getElementById("result").innerHTML = input.value;
+      });
+
+      // Bổ sung hành động nữa
+      input.addEventListener("keyup", function () {
+        if (input.value.length > 5) {
+          alert("Bạn đã nhập nhiều hơn 5 ký tự");
+        }
+      });
+    </script>
+    <hr>
+    <div id="result2"></div>
+    <input type="button" value="Stop Random" id="stop_random" />
+    <script language="javascript">
+      // Bước 1: Lấy các đối tưong
+      var result = document.getElementById("result2");
+      var button = document.getElementById("stop_random");
+      var html = document.getElementsByTagName("html")[0];
+
+      // Bước 2: Dinh nghĩa hanh đong hien thi day so random
+      function do_random() {
+        var randomString = Math.random();
+        result.innerHTML = randomString;
+      }
+
+      // Buoc 3: Them hanh dong do_random cho su kien mousemove the <html>,
+      html.addEventListener("mousemove", do_random);
+
+      // Buoc 4: Them su kien click cho button
+      button.addEventListener("click", function () {
+        // Xóa hành động do_random khỏi sự kien mousemove
+        html.removeEventListener("mousemove", do_random);
+      });
+    </script>
+  </body>
+</html>

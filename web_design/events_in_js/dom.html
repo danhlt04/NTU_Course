@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="content1">Nội dung của thẻ DIV</div>
+    <input type="button" value="Lay noi dung" onclick="get_content()" />
+    <input type="button" value="Thay đổi noi dung" onclick="set_content()" />
+
+    <script>
+      function set_content() {
+        document.getElementById("content1").innerHTML =
+          "<h1>Nội dung đã được thay đổi</h1>";
+      }
+
+      function get_content() {
+        var html = document.getElementById("content1").innerHTML;
+        alert("Nội dung cần lấy là: " + html);
+      }
+    </script>
+
+    <hr />
+
+    <input type="button" value="CLick me" onclick="change()" id="object1" />
+    <script>
+      function change() {
+        var object = document.getElementById("object1");
+        var type = object.type;
+
+        if (type == "button") object.type = "text";
+        else object.type = "button";
+      }
+    </script>
+
+    <hr />
+
+    <div id="message1">Chao mung cac ban den voi javascript</div>
+    <input
+      type="button"
+      value="Change backgroud"
+      onclick="change_background()"
+    />
+    <input type="button" value="Change color" onclick="change_color()" />
+    <input type="button" value="Change height" onclick="change_height()" />
+    <input type="button" value="Change fontsize" onclick="change_font_size()" />
+
+    <script>
+      function change_background() {
+        document.getElementById("message1").style.background = "red";
+      }
+      function change_color() {
+        document.getElementById("message1").style.color = "blue";
+      }
+      function change_height() {
+        document.getElementById("message1").style.height = "500px";
+      }
+      function change_font_size() {
+        document.getElementById("message1").style.fontSize = "500px";
+      }
+    </script>
+
+    <hr />
+
+    <script>
+      var p = document.createElement("p");
+      p.innerHTML = "Hoc DOM Nodes";
+      document.body.appendChild(p);
+    </script>
+
+    <hr />
+
+    <script>
+      var p = document.createElement("p");
+      var text = document.createTextNode("Hoc DOM Nodes");
+      p.appendChild(text);
+      document.body.appendChild(p);
+    </script>
+
+    <hr />
+
+    <div id="content2">
+      <h5>Xin chào các bạn</h5>
+      <h5>chúc vui vẻ khi học bài</h5>
+    </div>
+    <input type="button" value="View" id="btn-view" />
+
+    <script>
+      document
+        .getElementById("btn-view")
+        .addEventListener("click", function () {
+          var h1 = document.createElement("h1");
+          h1.innerHTML = "Chao mung ban den voi TiiL Tutors";
+
+          var element = document.getElementById("content2");
+          var element_child = element.getElementsByTagName("h5")[1];
+
+          element.insertBefore(h1, element_child);
+        });
+    </script>
+
+    <hr />
+
+    <div id="content3">
+      <h5>chúc vui vẻ khi học bài</h5>
+    </div>
+    <input type="button" value="Remove" id="btn-remove" />
+
+    <script>
+      document
+        .getElementById("btn-remove")
+        .addEventListener("click", function () {
+          var need_remove = document
+            .getElementById("content3")
+            .getElementsByTagName("h5")[0];
+
+          document.getElementById("content3").removeChild(need_remove);
+        });
+    </script>
+
+    <hr />
+
+    <div id="content4">
+      <h5>chuc vui vẻ khi học bai</h5>
+    </div>
+    <input type="button" value="Replace" id="btn-replace" />
+
+    <script>
+      document
+        .getElementById("btn-replace")
+        .addEventListener("click", function () {
+          var p = document.createElement("h1");
+          p.innerHTML = "Xin chao!";
+
+          var replace = document
+            .getElementById("content4")
+            .getElementsByTagName("h5")[0];
+
+          document.getElementById("content4").replaceChild(p, replace);
+        });
+    </script>
+  </body>
+</html>
