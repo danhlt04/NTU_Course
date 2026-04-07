@@ -50,7 +50,7 @@ CREATE TABLE TuaSach (
 CREATE TABLE DauSach (
 	ISBN varchar(25),
 	Ma_TuaSach varchar(50),
-	NgonNgu varchar(20),
+	NgonNgu nvarchar(50),
 	Bia nvarchar(20),
 	TrangThai nvarchar(50)
 	constraint pk_ds_isbn primary key(ISBN)
@@ -106,23 +106,18 @@ ALTER TABLE NguoiLon add constraint fk_nl_mdg foreign key(Ma_DocGia) references 
 ALTER TABLE TreEm add constraint fk_te_mdg foreign key(Ma_DocGia) references DocGia(Ma_DocGia)
 ALTER TABLE TreEm add constraint fk_te_mdgnl foreign key(Ma_DocGia_NguoiLon) references NguoiLon(Ma_DocGia)
 
-
--- 1. Nhập dữ liệu cho bảng DocGia (Cần nhập trước để làm khóa ngoại)
--- Bao gồm cả người lớn và trẻ em
 INSERT INTO DocGia (Ma_DocGia, Ho, TenLot, Ten, NgaySinh) VALUES
 ('DG001', N'Nguyễn', N'Văn', N'An', '1985-05-12'),
 ('DG002', N'Trần', N'Thị', N'Bình', '1990-08-20'),
 ('DG003', N'Lê', N'Hoàng', N'Cường', '1978-12-05'),
 ('DG004', N'Phạm', N'Minh', N'Đức', '1995-03-15'),
 ('DG005', N'Vũ', N'Thu', N'Hà', '1988-11-25'),
-('DG006', N'Nguyễn', N'Minh', N'Khôi', '2015-01-10'), -- Trẻ em
-('DG007', N'Trần', N'Bảo', N'Ngọc', '2016-06-22'),  -- Trẻ em
-('DG008', N'Lê', N'Tuấn', N'Kiệt', '2017-09-14'),   -- Trẻ em
-('DG009', N'Phạm', N'Thùy', N'Dương', '2014-04-30'), -- Trẻ em
-('DG010', N'Đặng', N'Gia', N'Huy', '2018-02-18');    -- Trẻ em
+('DG006', N'Nguyễn', N'Minh', N'Khôi', '2015-01-10'), 
+('DG007', N'Trần', N'Bảo', N'Ngọc', '2016-06-22'),  
+('DG008', N'Lê', N'Tuấn', N'Kiệt', '2017-09-14'),   
+('DG009', N'Phạm', N'Thùy', N'Dương', '2014-04-30'), 
+('DG010', N'Đặng', N'Gia', N'Huy', '2018-02-18');    
 
-
--- 2. Nhập dữ liệu cho bảng NguoiLon
 INSERT INTO NguoiLon (Ma_DocGia, SoNha, Duong, Quan, DienThoai, HanSuDung) VALUES
 ('DG001', '123', N'Lê Lợi', 1, '0901234567', '2026-12-31'),
 ('DG002', '456', N'Nguyễn Huệ', 1, '0912345678', '2025-10-20'),
@@ -130,8 +125,6 @@ INSERT INTO NguoiLon (Ma_DocGia, SoNha, Duong, Quan, DienThoai, HanSuDung) VALUE
 ('DG004', '12', N'Trần Hưng Đạo', 5, '0934567890', '2025-08-12'),
 ('DG005', '99', N'Phan Đăng Lưu', 7, '0945678901', '2027-01-01');
 
-
--- 3. Nhập dữ liệu cho bảng TreEm (Ma_DocGia_NguoiLon phải tồn tại trong bảng NguoiLon)
 INSERT INTO TreEm (Ma_DocGia, Ma_DocGia_NguoiLon) VALUES
 ('DG006', 'DG001'),
 ('DG007', 'DG002'),
@@ -139,8 +132,6 @@ INSERT INTO TreEm (Ma_DocGia, Ma_DocGia_NguoiLon) VALUES
 ('DG009', 'DG004'),
 ('DG010', 'DG005');
 
-
--- 4. Nhập dữ liệu cho bảng TuaSach
 INSERT INTO TuaSach (Ma_TuaSach, TuaSach, TacGia, TomTat) VALUES
 ('TS001', N'Số Đỏ', N'Vũ Trọng Phụng', N'Tác phẩm văn học hiện thực phê phán Việt Nam.'),
 ('TS002', N'Dế Mèn Phiêu Lưu Ký', N'Tô Hoài', N'Truyện về chú dế mèn nghị lực và những chuyến đi.'),
@@ -148,8 +139,6 @@ INSERT INTO TuaSach (Ma_TuaSach, TuaSach, TacGia, TomTat) VALUES
 ('TS004', N'Lịch sử Việt Nam', N'Nhiều tác giả', N'Tóm tắt các giai đoạn lịch sử hào hùng.'),
 ('TS005', N'Vũ trụ trong vỏ hạt dẻ', N'Stephen Hawking', N'Khám phá những bí ẩn của vật lý lý thuyết.');
 
-
--- 5. Nhập dữ liệu cho bảng DauSach (ISBN là khóa chính)
 INSERT INTO DauSach (ISBN, Ma_TuaSach, NgonNgu, Bia, TrangThai) VALUES
 ('978-604-1', 'TS001', N'Tiếng Việt', N'Bìa mềm', N'Sẵn có'),
 ('978-604-2', 'TS002', N'Tiếng Việt', N'Bìa cứng', N'Sẵn có'),
@@ -157,8 +146,6 @@ INSERT INTO DauSach (ISBN, Ma_TuaSach, NgonNgu, Bia, TrangThai) VALUES
 ('978-604-4', 'TS004', N'Tiếng Việt', N'Bìa mềm', N'Sẵn có'),
 ('978-604-5', 'TS005', N'Tiếng Anh', N'Bìa cứng', N'Sẵn có');
 
-
--- 6. Nhập dữ liệu cho bảng CuonSach
 INSERT INTO CuonSach (ISBN, Ma_CuonSach, TinhTrang) VALUES
 ('978-604-1', 'CS001', N'Mới'),
 ('978-604-2', 'CS002', N'Tốt'),
@@ -166,8 +153,6 @@ INSERT INTO CuonSach (ISBN, Ma_CuonSach, TinhTrang) VALUES
 ('978-604-4', 'CS004', N'Mới'),
 ('978-604-5', 'CS005', N'Tốt');
 
-
--- 7. Nhập dữ liệu cho bảng DangKy
 INSERT INTO DangKy (ISBN, Ma_DocGia, NgayDK, GhiChu) VALUES
 ('978-604-1', 'DG001', GETDATE(), N'Đăng ký mượn sớm'),
 ('978-604-2', 'DG006', GETDATE(), N'Phụ huynh bảo lãnh'),
@@ -175,8 +160,6 @@ INSERT INTO DangKy (ISBN, Ma_DocGia, NgayDK, GhiChu) VALUES
 ('978-604-4', 'DG003', GETDATE(), N'Mượn nghiên cứu'),
 ('978-604-5', 'DG004', GETDATE(), NULL);
 
-
--- 8. Nhập dữ liệu cho bảng Muon
 INSERT INTO Muon (ISBN, Ma_CuonSach, Ma_DocGia, NgayMuon, NgayHetHan) VALUES
 ('978-604-1', 'CS001', 'DG001', '2024-03-20', '2024-04-03'),
 ('978-604-2', 'CS002', 'DG006', '2024-03-21', '2024-04-04'),
@@ -184,8 +167,6 @@ INSERT INTO Muon (ISBN, Ma_CuonSach, Ma_DocGia, NgayMuon, NgayHetHan) VALUES
 ('978-604-4', 'CS004', 'DG003', '2024-03-23', '2024-04-06'),
 ('978-604-5', 'CS005', 'DG004', '2024-03-24', '2024-04-07');
 
-
--- 9. Nhập dữ liệu cho bảng QuaTrinhMuon (Lịch sử đã trả hoặc đang mượn)
 INSERT INTO QuaTrinhMuon (ISBN, Ma_CuonSach, NgayMuon, Ma_DocGia, NgayHetHan, NgayTra, TienMuon, TienDaTra, TienDatCoc, GhiChu) VALUES
 ('978-604-1', 'CS001', '2024-01-10', 'DG001', '2024-01-24', '2024-01-23', 5.00, 5.00, 50.00, N'Trả đúng hạn'),
 ('978-604-2', 'CS002', '2024-01-15', 'DG006', '2024-01-29', '2024-01-30', 5.00, 7.00, 50.00, N'Trễ 1 ngày, phạt 2$'),
@@ -194,43 +175,226 @@ INSERT INTO QuaTrinhMuon (ISBN, Ma_CuonSach, NgayMuon, Ma_DocGia, NgayHetHan, Ng
 ('978-604-5', 'CS005', '2024-03-01', 'DG004', '2024-03-15', '2024-03-15', 8.00, 8.00, 80.00, N'Sách ngoại văn');
 
 
--- 1. Có bao nhiêu phiếu mượn sách thư viện trong năm qua?
+-- 1. Có bao nhiêu phiếu mượn sách thư viện trong năm qua? (năm hiện tại là 2026)
+SELECT COUNT(*) AS SoPhieuMuon 
+FROM QuaTrinhMuon 
+WHERE YEAR(NgayMuon) = 2025;
+
 -- 2. Cho biết danh sách số ngày mượn sách của các lần đã mượn sách?
+SELECT ISBN, Ma_CuonSach, Ma_DocGia, DATEDIFF(day, NgayMuon, NgayTra) AS SoNgayMuon
+FROM QuaTrinhMuon
+WHERE NgayTra IS NOT NULL;
+
 -- 3. Cho biết danh sách số ngày mượn sách trung bình của các lần đã mượn sách?
+SELECT AVG(CAST(DATEDIFF(day, NgayMuon, NgayTra) AS FLOAT)) AS TrungBinhNgayMuon
+FROM QuaTrinhMuon
+WHERE NgayTra IS NOT NULL;
+
 -- 4. Cho biết danh sách những phiếu mượn trả sách quá hạn?
+SELECT * FROM QuaTrinhMuon 
+WHERE NgayTra > NgayHetHan;
+
 -- 5. Cho biết danh sách (độc giả, sách được mượn) những độc giả đã được mượn quá hạn?
+SELECT DISTINCT dg.Ma_DocGia, dg.Ho, dg.Ten, ts.TuaSach
+FROM DocGia dg
+JOIN QuaTrinhMuon qtm ON dg.Ma_DocGia = qtm.Ma_DocGia
+JOIN DauSach ds ON qtm.ISBN = ds.ISBN
+JOIN TuaSach ts ON ds.Ma_TuaSach = ts.Ma_TuaSach
+WHERE qtm.NgayTra > qtm.NgayHetHan;
+
 -- 6. Cho biết danh sách (độc giả, sách được mượn) những độc giả đã và đang được mượn quá han?
+SELECT DISTINCT dg.Ma_DocGia, dg.Ho, dg.Ten
+FROM DocGia dg
+LEFT JOIN QuaTrinhMuon qtm ON dg.Ma_DocGia = qtm.Ma_DocGia
+LEFT JOIN Muon m ON dg.Ma_DocGia = m.Ma_DocGia
+WHERE qtm.NgayTra > qtm.NgayHetHan 
+   OR (m.NgayHetHan < GETDATE());
+
 -- 7. Số lượng sách nhiều nhất mà một người đã mượn?
--- 8. Bạn dọc mượn sách nhiều nhắt là ngày nào? 
+SELECT TOP 1 COUNT(*) AS SoLuongMuon
+FROM QuaTrinhMuon
+GROUP BY Ma_DocGia
+ORDER BY SoLuongMuon DESC;
+
+-- 8. Bạn đọc mượn sách nhiều nhất là ngày nào? 
+SELECT TOP 1 NgayMuon, COUNT(*) AS SoLuotMuon
+FROM QuaTrinhMuon
+GROUP BY NgayMuon
+ORDER BY SoLuotMuon DESC;
+
 -- 9. Tính tống số tiền mượn đã trả trong quá trình mượn sách
+SELECT SUM(TienDaTra) AS TongTienDaTra FROM QuaTrinhMuon;
+
 -- 10. Tìm số cuốn sách có tình trạng "Hỏng"
+SELECT COUNT(*) FROM CuonSach WHERE TinhTrang = N'Hỏng';
+
 -- 11. Tính số cuốn sách trung bình mỗi độc giả đã mượn
+SELECT CAST(COUNT(ISBN) AS FLOAT) / (SELECT COUNT(*) FROM DocGia) AS TB_Sach_DocGia
+FROM QuaTrinhMuon;
+
 -- 12. Tìm số lượng sách của từng tác giả
+SELECT TacGia, COUNT(ISBN) AS SoLuongDauSach
+FROM TuaSach ts 
+JOIN DauSach ds ON ts.Ma_TuaSach = ds.Ma_TuaSach
+GROUP BY TacGia;
+
 -- 13. Tìm các tác giả có hơn 5 đầu sách trong thư viện
+SELECT TacGia
+FROM TuaSach ts 
+JOIN DauSach ds ON ts.Ma_TuaSach = ds.Ma_TuaSach
+GROUP BY TacGia
+HAVING COUNT(ISBN) > 5;
+
 -- 14. Tìm các độc giả đã mượn hơn 3 cuốn sách
+SELECT Ma_DocGia, COUNT(*) AS SoLanMuon
+FROM QuaTrinhMuon
+GROUP BY Ma_DocGia
+HAVING COUNT(*) > 3;
+
 -- 15. Tìm các đầu sách có hơn 2 cuốn sách bị hỏng
+SELECT ISBN, COUNT(*) AS SoCuonHong
+FROM CuonSach
+WHERE TinhTrang = N'Hỏng'
+GROUP BY ISBN
+HAVING COUNT(*) > 2;
+
 -- 16. Tìm độc giả đã đăng ký mượn hơn 2 cuốn sách
+SELECT Ma_DocGia, COUNT(*) AS SoLuongDangKy
+FROM DangKy
+GROUP BY Ma_DocGia
+HAVING COUNT(*) > 2;
+
 -- 17. Tìm các ngày có hơn 3 lượt mượn sách
+SELECT NgayMuon, COUNT(*) AS SoLuot
+FROM QuaTrinhMuon
+GROUP BY NgayMuon
+HAVING COUNT(*) > 3;
+
 -- 18. Tìm độc giả trẻ nhất
+SELECT TOP 1 * FROM DocGia ORDER BY NgaySinh DESC;
+
 -- 19. Tìm đầu sách có số lượng sách ít nhất
+SELECT TOP 1 ISBN, COUNT(*) AS SoLuong
+FROM CuonSach
+GROUP BY ISBN
+ORDER BY SoLuong ASC;
+
 -- 20. Tìm độc giả chưa từng mượn sách
+SELECT * FROM DocGia 
+WHERE Ma_DocGia NOT IN (SELECT Ma_DocGia FROM QuaTrinhMuon)
+  AND Ma_DocGia NOT IN (SELECT Ma_DocGia FROM Muon);
+
 -- 21. Tìm sách chưa được ai đăng ký mượn
+SELECT * FROM DauSach 
+WHERE ISBN NOT IN (SELECT ISBN FROM DangKy);
+
 -- 22. Tìm độc giả đã mượn nhưng chưa trả sách
+SELECT DISTINCT dg.* FROM DocGia dg
+JOIN Muon m ON dg.Ma_DocGia = m.Ma_DocGia;
+
 -- 23. Lấy danh sách tất cả độc giả cả người lớn và trẻ em
+SELECT Ma_DocGia, N'Người lớn' AS Loai FROM NguoiLon
+UNION
+SELECT Ma_DocGia, N'Trẻ em' AS Loai FROM TreEm;
+
 -- 24. Lấy danh sách độc gỉa vừa đăng ký vừa mượn sách
+SELECT Ma_DocGia FROM DangKy
+INTERSECT
+SELECT Ma_DocGia FROM QuaTrinhMuon;
+
 -- 25. Lấy danh sách độc giả chỉ đăng ký nhưng chưa mượn sách
+SELECT Ma_DocGia FROM DangKy
+EXCEPT
+(SELECT Ma_DocGia FROM QuaTrinhMuon UNION SELECT Ma_DocGia FROM Muon);
+
 -- 26. Cập nhật tình trạng sách bị hỏng thành "Đang sửa"
--- 28. Xóa tất cá độc giả chưa từng mượn sách
+BEGIN TRANSACTION;
+UPDATE CuonSach SET TinhTrang = N'Đang sửa' WHERE TinhTrang = N'Hỏng';
+SELECT * FROM CuonSach; 
+ROLLBACK; 
+
 -- 27. Gia hạn thêm 1 năm cho tất cả độc giả người lớn
--- 30. Xóa tất cả sách đã bị hỏng
+BEGIN TRANSACTION;
+UPDATE NguoiLon SET HanSuDung = DATEADD(year, 1, HanSuDung);
+SELECT * FROM NguoiLon;
+ROLLBACK;
+
+-- 28. Xóa tất cá độc giả chưa từng mượn sách
+BEGIN TRANSACTION;
+DELETE FROM NguoiLon WHERE Ma_DocGia NOT IN (SELECT Ma_DocGia FROM QuaTrinhMuon) AND Ma_DocGia NOT IN (SELECT Ma_DocGia FROM Muon);
+DELETE FROM TreEm WHERE Ma_DocGia NOT IN (SELECT Ma_DocGia FROM QuaTrinhMuon) AND Ma_DocGia NOT IN (SELECT Ma_DocGia FROM Muon);
+DELETE FROM DocGia WHERE Ma_DocGia NOT IN (SELECT Ma_DocGia FROM QuaTrinhMuon) AND Ma_DocGia NOT IN (SELECT Ma_DocGia FROM Muon);
+SELECT * FROM DocGia;
+ROLLBACK;
+
 -- 29. Cập nhật số điện thoại của độc giả có mã số là 5 thành 0909123456
+BEGIN TRANSACTION;
+UPDATE NguoiLon SET DienThoai = '0909123456' WHERE Ma_DocGia = 'DG005';
+SELECT * FROM NguoiLon WHERE Ma_DocGia = 'DG005';
+ROLLBACK;
+
+-- 30. Xóa tất cả sách đã bị hỏng
+BEGIN TRANSACTION;
+DELETE FROM CuonSach WHERE TinhTrang = N'Hỏng';
+SELECT * FROM CuonSach;
+ROLLBACK;
+
 -- 31. Tìm độc giả đã mượn tất cả các đầu sách
+SELECT Ma_DocGia FROM DocGia dg
+WHERE NOT EXISTS (
+    SELECT ISBN FROM DauSach
+    EXCEPT
+    SELECT ISBN FROM QuaTrinhMuon qtm WHERE qtm.Ma_DocGia = dg.Ma_DocGia
+);
+
 -- 32. Tìm độc giả đã đăng ký mượn tất cả các đầu sách
+SELECT Ma_DocGia FROM DocGia dg
+WHERE NOT EXISTS (
+    SELECT ISBN FROM DauSach
+    EXCEPT
+    SELECT ISBN FROM DangKy dk WHERE dk.Ma_DocGia = dg.Ma_DocGia
+);
+
 -- 33. Liệt kê top 5 bạn dọc mượn sách nhiều nhất trong năm 2024
+SELECT TOP 5 Ma_DocGia, COUNT(*) AS SoLanMuon
+FROM QuaTrinhMuon
+WHERE YEAR(NgayMuon) = 2024
+GROUP BY Ma_DocGia
+ORDER BY SoLanMuon DESC;
+
 -- 34. Liệt kê thể loại sách được mượn nhiều nhất trong quý 1 năm 2025
+SELECT TOP 1 ds.NgonNgu, COUNT(*) AS SoLuotMuon
+FROM QuaTrinhMuon qtm
+JOIN DauSach ds ON qtm.ISBN = ds.ISBN
+WHERE YEAR(qtm.NgayMuon) = 2024 AND DATEPART(quarter, qtm.NgayMuon) = 1
+GROUP BY ds.NgonNgu
+ORDER BY SoLuotMuon DESC;
+
 -- 35. Tìm bạn đọc trả sách trễ nhiều lần nhất (Tính số lần NgayTra > HanTra cho từng bạn đọc, lọc ra top đầu COUNT(CASE WHEN ... THEN 1 END))
--- 36.Tìm những bạn dọc mượn đù tất cá sách cùa tác giả "Nguyễn Nhật Ánh"
--- 37.Danh sách bạn đọc chưa mượn quyển sách nào kể từ khi đăng ký
+SELECT TOP 1 Ma_DocGia, COUNT(*) AS SoLanTre
+FROM QuaTrinhMuon
+WHERE NgayTra > NgayHetHan
+GROUP BY Ma_DocGia
+ORDER BY SoLanTre DESC;
+
+-- 36. Tìm những bạn đọc mượn đủ tất cả sách cùa tác giả "Nguyễn Nhật Ánh"
+SELECT Ma_DocGia FROM DocGia dg
+WHERE NOT EXISTS (
+    SELECT ISBN FROM DauSach ds 
+    JOIN TuaSach ts ON ds.Ma_TuaSach = ts.Ma_TuaSach
+    WHERE ts.TacGia = N'Nguyễn Nhật Ánh'
+    EXCEPT
+    SELECT ISBN FROM QuaTrinhMuon qtm WHERE qtm.Ma_DocGia = dg.Ma_DocGia
+);
+
+-- 37. Danh sách bạn đọc chưa mượn quyển sách nào kể từ khi đăng ký
+SELECT DISTINCT dg.*
+FROM DocGia dg
+JOIN DangKy dk ON dg.Ma_DocGia = dk.Ma_DocGia
+WHERE NOT EXISTS (
+    SELECT 1 FROM QuaTrinhMuon qtm 
+    WHERE qtm.Ma_DocGia = dg.Ma_DocGia AND qtm.NgayMuon >= dk.NgayDK
+);
 
 /*
 Bài tập chương 6
