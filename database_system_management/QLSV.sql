@@ -429,7 +429,7 @@ WHERE NOT EXISTS (
 )
 
 -- Câu 41: Thêm các field SLMon (số lượng môn), DTB (điểm trung bình), XL (xếp loại) vào bảng SinhVien
-BEGIN TRAN
+--BEGIN TRAN
 
 IF COL_LENGTH('SINHVIEN', 'SLMon') IS NULL
     ALTER TABLE SINHVIEN ADD SLMon INT
@@ -440,7 +440,7 @@ IF COL_LENGTH('SINHVIEN', 'DTB') IS NULL
 IF COL_LENGTH('SINHVIEN', 'XL') IS NULL
     ALTER TABLE SINHVIEN ADD XL NVARCHAR(20)
 
-ROLLBACK
+--ROLLBACK
 
 /*
 Câu 42: Cập nhật thông tin cho các field vừa tạo:
@@ -448,7 +448,7 @@ Câu 42: Cập nhật thông tin cho các field vừa tạo:
 	DTB: điểm trung bình
 	XL: xếp loại theo thang (Yếu, Trung bình, Khá, Giỏi, Xuất sắc)
 */
-BEGIN TRAN
+--BEGIN TRAN
 
 UPDATE SV
 SET 
@@ -472,7 +472,7 @@ JOIN (
 
 SELECT * FROM SINHVIEN
 
-ROLLBACK
+--ROLLBACK
 
 -- Câu 43: Xóa toàn bộ kết quả học tập của sinh viên 'SV002'
 BEGIN TRAN
@@ -485,7 +485,7 @@ SELECT * FROM KETQUA WHERE MaSV = 'SV002'
 ROLLBACK
 
 -- Câu 44: Xóa các sinh viên có điểm trung bình < 5
-BEGIN TRAN
+--BEGIN TRAN
 
 DELETE FROM KETQUA
 WHERE MaSV IN (
@@ -509,10 +509,10 @@ WHERE MSSV IN (
     WHERE DTB < 5
 )
 
-ROLLBACK
+--ROLLBACK
 
 -- Câu 45: Xóa những khoa không có sinh viên theo học
-BEGIN TRAN
+--BEGIN TRAN
 
 DELETE FROM KHOA
 WHERE NOT EXISTS (
@@ -521,7 +521,7 @@ WHERE NOT EXISTS (
     WHERE SV.MaKhoa = KHOA.MaKhoa
 )
 
-ROLLBACK
+--ROLLBACK
 
 /*
 1
@@ -530,21 +530,108 @@ Thực hiện các thủ tục tương tự đối với các bảng còn lại
 Hiển thị thông tin dựa vào mã truyền vào
 */
 
--- Select Sinh Viên
-CREATE PROC sp_SelectSinhVien (@Masv varchar(5))
-AS
-BEGIN
-    SELECT * FROM SINHVIEN WHERE MSSV = @Masv
-END
+--SINHVIEN 
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'sp_Select_SinhVien')
+    DROP PROCEDURE sp_Select_SinhVien;
 GO
 
--- Ví dụ cho bảng Khoa
-CREATE PROC sp_SelectKhoa (@MaKhoa varchar(10))
+CREATE PROCEDURE sp_Select_SinhVien
+    @Masv VARCHAR(5)
 AS
 BEGIN
-    SELECT * FROM KHOA WHERE MaKhoa = @MaKhoa
-END
+    SELECT MSSV, Ten, GioiTinh, DiaChi, DienThoai, MaKhoa
+    FROM SINHVIEN
+    WHERE MSSV = @Masv;
+END;
 GO
+
+EXEC sp_Select_SinhVien 'SV001';
+
+-- KHOA
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'sp_Select_Khoa')
+    DROP PROCEDURE sp_Select_Khoa;
+GO
+
+CREATE PROCEDURE sp_Select_Khoa
+    @MaKhoa VARCHAR(10)
+AS
+BEGIN
+    SELECT MaKhoa, TenKhoa, SL_CBGD
+    FROM KHOA
+    WHERE MaKhoa = @MaKhoa;
+END;
+GO
+
+EXEC sp_Select_Khoa 'CNTT';
+
+-- GIAOVIEN
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'sp_Select_GiaoVien')
+    DROP PROCEDURE sp_Select_GiaoVien;
+GO
+
+CREATE PROCEDURE sp_Select_GiaoVien
+    @MaGV VARCHAR(5)
+AS
+BEGIN
+    SELECT MaGV, TenGV, MaKhoa
+    FROM GIAOVIEN
+    WHERE MaGV = @MaGV;
+END;
+GO
+
+EXEC sp_Select_GiaoVien 'GV01';
+
+-- MONHOC
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'sp_Select_MonHoc')
+    DROP PROCEDURE sp_Select_MonHoc;
+GO
+
+CREATE PROCEDURE sp_Select_MonHoc
+    @MaMH VARCHAR(5)
+AS
+BEGIN
+    SELECT MaMH, TenMH, SoTC
+    FROM MONHOC
+    WHERE MaMH = @MaMH;
+END;
+GO
+
+EXEC sp_Select_MonHoc 'CSDL';
+
+-- GIANGDAY
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'sp_Select_GiangDay')
+    DROP PROCEDURE sp_Select_GiangDay;
+GO
+
+CREATE PROCEDURE sp_Select_GiangDay
+    @MaKhoaHoc VARCHAR(5)
+AS
+BEGIN
+    SELECT MaKhoaHoc, MaGV, MaMH, HocKy, Nam
+    FROM GIANGDAY
+    WHERE MaKhoaHoc = @MaKhoaHoc;
+END;
+GO
+
+EXEC sp_Select_GiangDay 'K1';
+
+-- KETQUA
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'sp_Select_KetQua')
+    DROP PROCEDURE sp_Select_KetQua;
+GO
+
+CREATE PROCEDURE sp_Select_KetQua
+    @Masv VARCHAR(5),
+    @MaKhoaHoc VARCHAR(5)
+AS
+BEGIN
+    SELECT MaSV, MaKhoaHoc, Diem
+    FROM KETQUA
+    WHERE MaSV = @Masv AND MaKhoaHoc = @MaKhoaHoc;
+END;
+GO
+
+EXEC sp_Select_KetQua 'SV001', 'K1';
 
 /*
 2
@@ -553,26 +640,38 @@ Thực hiện các thủ tục tương tự đối với các bảng còn lại
 Thêm mới thông tin vào một, yêu cầu masv bắt buộc phải có, nếu không hiền thị thông báo lỗi
 */
 
-CREATE PROC sp_Insert_Sinhvien (
-    @Masv varchar(5), 
-    @Hoten nvarchar(50), 
-    @GioiTinh nvarchar(5),
-    @Diachi nvarchar(100), 
-    @Dienthoai varchar(20),
-    @Makhoa varchar(10)
-)
+IF OBJECT_ID('sp_Insert_Sinhvien', 'P') IS NOT NULL
+    DROP PROCEDURE sp_Insert_Sinhvien;
+GO
+CREATE PROCEDURE sp_Insert_Sinhvien
+    @MaSV VARCHAR(5),
+    @Hoten NVARCHAR(50),
+    @Diachi NVARCHAR(100),
+    @Malop VARCHAR(10)
 AS
 BEGIN
-    IF (@Masv IS NULL OR @Masv = '')
+    -- Kiểm tra MaSV bắt buộc
+    IF @MaSV IS NULL OR LTRIM(RTRIM(@MaSV)) = ''
     BEGIN
-        RAISERROR('Lỗi: Mã sinh viên không được để trống!', 16, 1)
-        RETURN
+        PRINT N'Lỗi: Mã sinh viên không được để trống!';
+        RETURN;
     END
-    
-    INSERT INTO SINHVIEN (MSSV, Ten, GioiTinh, DiaChi, DienThoai, MaKhoa)
-    VALUES (@Masv, @Hoten, @GioiTinh, @Diachi, @Dienthoai, @Makhoa)
+
+    -- Kiểm tra trùng khóa chính
+    IF EXISTS (SELECT 1 FROM SINHVIEN WHERE MSSV = @MaSV)
+    BEGIN
+        PRINT N'Lỗi: Mã sinh viên đã tồn tại!';
+        RETURN;
+    END
+
+    -- Thêm dữ liệu
+    INSERT INTO SINHVIEN(MSSV, Ten, GioiTinh, DiaChi, MaKhoa)
+    VALUES(@MaSV, @Hoten, N'Nam', @Diachi, @Malop);
+
+    PRINT N'Thêm sinh viên thành công!';
 END
 GO
+
 
 /*
 3 
@@ -581,20 +680,21 @@ Thực hiện các thủ tục tương tự đôi với các bảng còn lại
 Sửa thông tin dựa vào masv. Kiểm tra nếu biền nào khác NULL thì mới cập nhật.
 */
 
-CREATE PROC sp_Update_Sinhvien (
-    @Masv varchar(5), 
-    @Hoten nvarchar(50) = NULL, 
-    @Diachi nvarchar(100) = NULL, 
-    @MaKhoa varchar(10) = NULL
-)
+CREATE PROC sp_Update_SinhVien(
+@Masv varchar(5), 
+@Hoten nvarchar(50) = NULL, 
+@Diachi nvarchar(100) = NULL, 
+@Malop varchar(10) = NULL)
 AS
 BEGIN
-    UPDATE SINHVIEN
-    SET Ten = ISNULL(@Hoten, Ten),
-        DiaChi = ISNULL(@Diachi, DiaChi),
-        MaKhoa = ISNULL(@MaKhoa, MaKhoa)
-    WHERE MSSV = @Masv
+	UPDATE SINHVIEN
+	SET Ten = ISNULL(@Hoten, Ten),
+		DiaChi = ISNULL(@Diachi, DiaChi),
+		MaKhoa = ISNULL(@Malop, MaKhoa)
+	WHERE @Masv = MSSV;
 END
+GO
+EXEC sp_Update_SinhVien @Masv = 'SV001', @Hoten = N'NGUYEN VAN NAM'
 GO
 
 /*
@@ -604,10 +704,27 @@ Thực hiện các thủ tục tương tự đối với các bảng còn lại
 Xóa thông tin dựa vào mã truyền vào
 */
 
-CREATE PROC sp_Delete_SinhVien (@Masv varchar(5))
+IF OBJECT_ID('sp_Delete_SinhVien', 'P') IS NOT NULL
+    DROP PROCEDURE sp_Delete_SinhVien;
+GO
+CREATE PROCEDURE sp_Delete_SinhVien
+    @Masv VARCHAR(5)
 AS
 BEGIN
-    DELETE FROM SINHVIEN WHERE MSSV = @Masv
+    -- Kiểm tra tồn tại
+    IF NOT EXISTS (SELECT 1 FROM SINHVIEN WHERE MSSV = @Masv)
+    BEGIN
+        PRINT N'Lỗi: Sinh viên không tồn tại!';
+        RETURN;
+    END
+
+    -- Xóa dữ liệu liên quan trước (tránh lỗi khóa ngoại)
+    DELETE FROM KETQUA WHERE MaSV = @Masv;
+
+    -- Xóa sinh viên
+    DELETE FROM SINHVIEN WHERE MSSV = @Masv;
+
+    PRINT N'Xóa sinh viên thành công!';
 END
 GO
 
@@ -616,114 +733,203 @@ GO
 5. Khi thêm bảng Sinh Vien: Nếu mã khoa không tồn tại bên bảng KHOA, nêu mã sv để trống hoặc bị trùng thì không cho thêm vào.
 */
 
-CREATE TRIGGER trg_CheckInsertSV
+IF OBJECT_ID('trg_CheckSinhVien', 'TR') IS NOT NULL
+    DROP TRIGGER trg_CheckSinhVien;
+GO
+
+CREATE TRIGGER trg_CheckSinhVien
 ON SINHVIEN
-FOR INSERT
+INSTEAD OF INSERT
 AS
 BEGIN
-    -- Kiểm tra mã khoa có tồn tại không
-    IF NOT EXISTS (SELECT * FROM KHOA WHERE MaKhoa IN (SELECT MaKhoa FROM inserted))
+    -- 1. MSSV không được rỗng
+    IF EXISTS (
+        SELECT 1 
+        FROM inserted 
+        WHERE MSSV IS NULL OR LTRIM(RTRIM(MSSV)) = ''
+    )
     BEGIN
-        RAISERROR('Lỗi: Mã khoa không tồn tại trong bảng KHOA!', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
+        RAISERROR(N'Lỗi: Mã sinh viên không được để trống!', 16, 1);
+        RETURN;
     END
 
-    -- Kiểm tra mã SV trống (PK đã check null nhưng trigger hỗ trợ thông báo)
-    IF EXISTS (SELECT 1 FROM inserted WHERE MSSV IS NULL OR MSSV = '')
+    -- 2. MSSV không được trùng
+    IF EXISTS (
+        SELECT 1 
+        FROM SINHVIEN s 
+        JOIN inserted i ON s.MSSV = i.MSSV
+    )
     BEGIN
-        RAISERROR('Lỗi: Mã sinh viên không được để trống!', 16, 1)
-        ROLLBACK TRANSACTION
+        RAISERROR(N'Lỗi: Mã sinh viên đã tồn tại!', 16, 1);
+        RETURN;
     END
-END
+    -- 3. MaKhoa phải tồn tại
+    IF EXISTS (
+        SELECT 1 
+        FROM inserted i
+        WHERE i.MaKhoa IS NOT NULL
+        AND NOT EXISTS (
+            SELECT 1 FROM KHOA k WHERE k.MaKhoa = i.MaKhoa
+        )
+    )
+    BEGIN
+        RAISERROR(N'Lỗi: Mã khoa không tồn tại!', 16, 1);
+        RETURN;
+    END
+
+    -- 4. Nếu hợp lệ → cho insert
+    INSERT INTO SINHVIEN (MSSV, Ten, GioiTinh, DiaChi, DienThoai, MaKhoa)
+    SELECT MSSV, Ten, GioiTinh, DiaChi, DienThoai, MaKhoa
+    FROM inserted;
+END;
 GO
 
 /*
 6. Khi thêm vào bảng MonHoc: tinchi phải >=2 và <=6
 */
 
-CREATE TRIGGER trg_CheckMonHoc
+IF OBJECT_ID('TRG_INSERT_MONHOC', 'TR') IS NOT NULL
+    DROP TRIGGER TRG_INSERT_MONHOC;
+GO
+CREATE TRIGGER TRG_INSERT_MONHOC
 ON MONHOC
-FOR INSERT, UPDATE
+AFTER INSERT
 AS
 BEGIN
-    IF EXISTS (SELECT 1 FROM inserted WHERE SoTC < 2 OR SoTC > 6)
+    IF EXISTS (
+        SELECT 1 FROM inserted
+        WHERE SoTC < 2 OR SoTC > 6
+    )
     BEGIN
-        RAISERROR('Lỗi: Số tín chỉ phải nằm trong khoảng từ 2 đến 6!', 16, 1)
-        ROLLBACK TRANSACTION
+        PRINT N'Lỗi: Số tín chỉ phải từ 2 đến 6!';
+        ROLLBACK TRANSACTION;
     END
 END
 GO
 
 --7. Khi sửa bảng Sinh Vien, sửa đổi MSSV tương ứng ở bảng KETQUA
 
-CREATE TRIGGER trg_UpdateSV_KetQua
+IF OBJECT_ID('TRG_UPDATE_SINHVIEN', 'TR') IS NOT NULL
+    DROP TRIGGER TRG_UPDATE_SINHVIEN;
+GO
+CREATE TRIGGER TRG_UPDATE_SINHVIEN
 ON SINHVIEN
 AFTER UPDATE
 AS
 BEGIN
+    -- Chỉ xử lý khi MSSV bị thay đổi
     IF UPDATE(MSSV)
     BEGIN
         UPDATE KETQUA
         SET MaSV = i.MSSV
-        FROM KETQUA k JOIN deleted d ON k.MaSV = d.MSSV
-        JOIN inserted i ON 1=1 -- Logic join đơn giản dựa trên sự thay đổi
+        FROM KETQUA kq
+        JOIN deleted d ON kq.MaSV = d.MSSV
+        JOIN inserted i ON d.MSSV <> i.MSSV
     END
 END
 GO
 
 --8. Khi sửa bảng KHOA, sửa đổi MaKhoa trên bảng Sinh Vien
 
-CREATE TRIGGER trg_UpdateKhoa_SV
+IF EXISTS (SELECT * FROM sys.triggers WHERE name = 'trg_Cau8_UpdateMaKhoa')
+    DROP TRIGGER trg_Cau8_UpdateMaKhoa;
+GO
+
+
+CREATE TRIGGER trg_Cau8_UpdateMaKhoa
 ON KHOA
 AFTER UPDATE
 AS
 BEGIN
+    -- Kiểm tra xem cột MaKhoa có bị sửa không
     IF UPDATE(MaKhoa)
     BEGIN
+        -- Cập nhật bảng SINHVIEN theo MaKhoa mới
         UPDATE SINHVIEN
         SET MaKhoa = i.MaKhoa
-        FROM SINHVIEN s JOIN deleted d ON s.MaKhoa = d.MaKhoa
-        JOIN inserted i ON 1=1
+        FROM SINHVIEN s
+        INNER JOIN deleted d ON s.MaKhoa = d.MaKhoa
+        CROSS JOIN inserted i;
     END
 END
+UPDATE KHOA
+SET Makhoa ='IT'
+WHERE Makhoa ='CNTT'
 GO
 
 --9. Khi sửa bảng monhoc, sửa đổi MAMH trên bảng GIANGDAY
 
-CREATE TRIGGER trg_UpdateMH_GiangDay
+IF OBJECT_ID('TRG_UPDATE_MONHOC', 'TR') IS NOT NULL
+    DROP TRIGGER TRG_UPDATE_MONHOC;
+GO
+CREATE TRIGGER TRG_UPDATE_MONHOC
 ON MONHOC
 AFTER UPDATE
 AS
 BEGIN
+    -- Chỉ xử lý khi MaMH bị thay đổi
     IF UPDATE(MaMH)
     BEGIN
         UPDATE GIANGDAY
         SET MaMH = i.MaMH
-        FROM GIANGDAY g JOIN deleted d ON g.MaMH = d.MaMH
-        JOIN inserted i ON 1=1
+        FROM GIANGDAY gd
+        JOIN deleted d ON gd.MaMH = d.MaMH
+        JOIN inserted i ON d.MaMH <> i.MaMH
     END
 END
 GO
 
 --10. Khi xóa bảng Sinh Vien. Xóa những sinh viên tương ứng trong bảng KetQua
 
-CREATE TRIGGER trg_DeleteSV_KetQua
-ON SINHVIEN
-FOR DELETE
-AS
-BEGIN
-    DELETE FROM KETQUA WHERE MaSV IN (SELECT MSSV FROM deleted)
-END
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME = 'trg_SinhVien_delete' AND TYPE = 'tr')
+DROP TRIGGER trg_SinhVien_delete 
 GO
+CREATE TRIGGER trg_SinhVien_delete ON SINHVIEN
+INSTEAD OF DELETE AS
+BEGIN
+	DELETE FROM KETQUA 
+	FROM KETQUA JOIN deleted ON MaSV = MSSV
+END
+
 
 --11 Xóa bảng MonHoc, xóa mã môn học tương ứng trên bảng GIANGDAY
 
-CREATE TRIGGER trg_DeleteMH_GiangDay
+IF EXISTS (SELECT * FROM sys.triggers WHERE name = 'trg_Delete_MonHoc_Cau11')
+BEGIN
+    DROP TRIGGER trg_Delete_MonHoc_Cau11;
+END
+GO 
+CREATE TRIGGER trg_Delete_MonHoc_Cau11
 ON MONHOC
-FOR DELETE
+INSTEAD OF DELETE
 AS
 BEGIN
-    DELETE FROM GIANGDAY WHERE MaMH IN (SELECT MaMH FROM deleted)
-END
+    
+ 
+    -- BƯỚC 2: TIẾN HÀNH XÓA 
+    -- Xóa từ bảng con lên bảng cha
+    DELETE FROM KETQUA
+    WHERE MaKhoaHoc IN (SELECT MaKhoaHoc FROM GIANGDAY WHERE MaMH IN (SELECT MaMH FROM deleted));
+
+    DELETE FROM GIANGDAY
+    WHERE MaMH IN (SELECT MaMH FROM deleted);
+
+    DELETE FROM MONHOC
+    WHERE MaMH IN (SELECT MaMH FROM deleted);
+
+    PRINT N'Đã xóa Môn học và các dữ liệu liên quan thành công. Dữ liệu đã được lưu vào bảng Backup.';
+END;
 GO
+
+
+-- Test xóa môn CSDL
+DELETE FROM MONHOC WHERE MaMH = 'CSDL';
+
+-- 1. Kiểm tra bảng MONHOC: 
+SELECT * FROM MONHOC;
+
+-- 2. Kiểm tra bảng GIANGDAY: 
+SELECT * FROM GIANGDAY;
+
+-- 3. Kiểm tra bảng KETQUA: Điểm của các sinh viên thuộc khóa 'K1' và 'K5' cũng đã bị xóa sạch
+SELECT * FROM KETQUA;
