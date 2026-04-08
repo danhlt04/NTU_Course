@@ -584,7 +584,7 @@ WHERE NgayDat >= DATEADD(YEAR, -1, GETDATE())
 GROUP BY MaKH
 HAVING COUNT(MaDon) = 1
 
---44. Liệt kê khách hàng không có địa chỉ mặc định hoặc có >1 địa chỉ (Goi ý: GROUP BY MaKH HAVING SUM(CASE WHEN LaMacDinh=1 THEN 1 ELSE 0 END) <> 1)
+--44. Liệt kê khách hàng không có địa chỉ mặc định hoặc có >1 địa chỉ (Gợi ý: GROUP BY MaKH HAVING SUM(CASE WHEN LaMacDinh=1 THEN 1 ELSE 0 END) <> 1)
 SELECT MaKH, SUM(CAST(LaMacDinh AS INT)) AS SoDiaChiMacDinh
 FROM DIACHI
 GROUP BY MaKH
