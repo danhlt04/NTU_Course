@@ -487,3 +487,18 @@ BEGIN TRANSACTION;
 DELETE FROM MATHANG WHERE SOLUONG = 0 AND MAHANG NOT IN (SELECT MAHANG FROM CTDATHANG); 
 SELECT * FROM MATHANG;
 ROLLBACK;
+
+1. Tạo thủ tục lưu trữ đế thông qua thủ tục này có thể bổ sung thêm một bản ghi mới cho bảng MATHANG 
+(thủ tục phải thực hiện kiểm tra tính hợp lệ của dữ liệu cần bỏ sung: không trùng khoá chính và đảm bảo toàn ven tham chiếu)
+
+2. Tạo thủ tục lưu trữ có chức năng thống kê tổng số lượng hàng bán được của một mặt hàng có mã bất kỳ (mã mặt hàng cần thống kê là tham số của thủ tục)
+
+3. Viết hàm trả về một bảng trong đó cho biết tổng số lượng hàng bán được của mỗi mặt hàng. Sử dụng hàm này để thống kê xem tổng số lượng hàng (hiện có và đã bán) của mỗi mặt hàng là bao nhiêu
+
+4. Viết trigger cho bảng CHITIETDATHANG theo yêu cầu sau:
+Khi mộtt bản ghi mới được bổ sung vào bảng này thì giảm số lượng hàng hiện có nếu sản lượng hàng hiện có lớn hơn hoặc bằng số lượng hàng được bán ra. 
+Ngược lại thì huỷ bỏ thao tác bổ sung.
+Khi cập nhật lại số lượng hàng được bán, kiểm tra số lượng hàng được cập nhật lại có phù hợp hay không (số lượng hàng bán ra không được vượt quá số lượng hàng hiện có và không được nhỏ hơn 1). 
+Nếu dữ liệu hợp lệ thì giảm (hoặc tăng) số lượng hàng hiện có trong công ty, ngược lại thì huỷ bỏ thao tác cập nhật
+
+5. Viết trigger cho bảng CHITIETDATHANG đề sao cho chỉ chấp nhận giá hàng bán ra phải lớn hơn hoặc bằng giá gốc (giá cúa mặt hàng trong bảng MATHANG)
