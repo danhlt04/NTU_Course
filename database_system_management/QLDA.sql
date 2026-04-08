@@ -445,6 +445,121 @@ JOIN NHANVIEN NV ON PC.MANV = NV.MANV
 GROUP BY DA.MADA, DA.TENDA
 HAVING COUNT(DISTINCT NV.MAPB) = (SELECT COUNT(*) FROM PHONGBAN)
 
+-- CHUONG 5:
+-- PHAN 1: TAO LOGIN
+
+-- Cau 1: Tao login cho admin, nhan vien, truong phong
+-- admin: quan tri toan bo csdl
+-- nhanvien: chi duoc xem
+-- truongphong: xem va sua trong phong
+
+CREATE LOGIN admin_qlda WITH PASSWORD = 'Admin@123';
+CREATE LOGIN nhanvien_qlda WITH PASSWORD = 'NhanVien@123';
+CREATE LOGIN truongphong_qlda WITH PASSWORD = 'TruongPhong@123';
+
+-- Cau 2: Tao user tu login trong database QLDA
+
+USE QLDA;
+
+CREATE USER admin_user FOR LOGIN admin_qlda;
+CREATE USER nhanvien_user FOR LOGIN nhanvien_qlda;
+CREATE USER truongphong_user FOR LOGIN truongphong_qlda;
+
+-- PHAN 2: CAP QUYEN (GRANT)
+
+-- Cau 3: Cap quyen doc (SELECT) cho nhan vien tren 3 bang
+
+-- nhan vien chi duoc xem du lieu
+GRANT SELECT ON NHANVIEN TO nhanvien_user;
+GRANT SELECT ON DEAN TO nhanvien_user;
+GRANT SELECT ON PHANCONG TO nhanvien_user;
+
+
+-- Cau 4: Truong phong duoc them va cap nhat nhan vien
+
+-- SELECT: xem
+-- INSERT: them
+-- UPDATE: sua
+GRANT SELECT, INSERT, UPDATE ON NHANVIEN TO truongphong_user;
+
+
+-- Cau 5: Cap quyen cao nhat cho admin (db_owner)
+
+-- admin co toan quyen tren database
+ALTER ROLE db_owner ADD MEMBER admin_user;
+
+-- PHAN 3: THU HOI QUYEN (REVOKE, DENY)
+
+-- Cau 6: Thu hoi quyen cap nhat bang DEAN cua nhan vien
+
+-- REVOKE: bo quyen da cap
+REVOKE UPDATE ON DEAN FROM nhanvien_user;
+
+
+-- Cau 7: Cam truong phong xoa nhan vien
+
+-- DENY: cam hanh dong (uu tien cao hon grant)
+DENY DELETE ON NHANVIEN TO truongphong_user;
+
+-- PHAN 4: XOA LOGIN VA USER
+
+-- Cau 8: Xoa user va login cua nhan vien
+
+-- phai xoa user truoc roi moi xoa login
+USE QLDA;
+
+DROP USER nhanvien_user;
+DROP LOGIN nhanvien_qlda;
+
+
+-- =========================================
+-- PHAN 5: KIEM TRA QUYEN
+-- =========================================
+
+-- Cau 9: Liet ke quyen cua truong phong
+
+-- fn_my_permissions: xem quyen hien tai
+-- Liet ke quyen cua truongphong_user
+
+SELECT *
+FROM sys.database_permissions
+WHERE grantee_principal_id = USER_ID('truongphong_user');
+
+
+-- Cau 10: Kiem tra quyen tren bang NHANVIEN cua nhanvien_user
+
+-- Kiem tra quyen tren bang NHANVIEN cua nhanvien_user
+
+SELECT *
+FROM sys.database_permissions
+WHERE grantee_principal_id = USER_ID('nhanvien_user')
+AND major_id = OBJECT_ID('NHANVIEN');
+
+
+-- =========================================
+-- PHAN 6: NANG CAO
+-- =========================================
+
+-- Cau 1: Tao login ke toan
+CREATE LOGIN ke_toan_qlda WITH PASSWORD = 'KeToan@123';
+
+-- Cau 2: Tao user ke toan
+USE QLDA;
+CREATE USER ke_toan_user FOR LOGIN ke_toan_qlda;
+
+-- Cau 3: Cap quyen SELECT va UPDATE
+GRANT SELECT, UPDATE ON NHANVIEN TO ke_toan_user;
+GRANT SELECT, UPDATE ON PHANCONG TO ke_toan_user;
+
+-- Cau 4: Cam xoa du lieu
+DENY DELETE ON NHANVIEN TO ke_toan_user;
+
+-- Cau 5: Xoa user va login ke toan
+
+DROP USER ke_toan_user;
+DROP LOGIN ke_toan_qlda;
+
+
 --Store Procedure 
 1. Tìm danh sách nhân viên theo mã phòng ban
 
