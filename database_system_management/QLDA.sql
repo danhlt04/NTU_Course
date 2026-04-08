@@ -444,3 +444,56 @@ JOIN PHANCONG PC ON DA.MADA = PC.MADA
 JOIN NHANVIEN NV ON PC.MANV = NV.MANV
 GROUP BY DA.MADA, DA.TENDA
 HAVING COUNT(DISTINCT NV.MAPB) = (SELECT COUNT(*) FROM PHONGBAN)
+
+--Store Procedure 
+1. Tìm danh sách nhân viên theo mã phòng ban
+
+2. Tìm danh sách thân nhân theo mã nhân viên
+
+3.Tìm những nhân viên theo mã phòng ban có có mức lương cao hơn mức lương cần tìm
+
+4.Thêm thông tin cho nhân viên mới (SP_THEM_NHANVIEN), yêu cầu chỉ thêm nhân viên phòng Nghiên cứu
+
+5. Tìm danh sách các đề án được thực hiện bởi nhân viên có mã cho trước (SP_DEAN_MANV)
+
+6. Tính lương trung bình của phòng ban theo tên phòng (SP_LUONGTB_TENPB)
+
+7. Cho biết danh sách các công việc được phân công cho các nhần viên ở phòng ban cần tìm theo mã phòng (SP_CV_MAPHG)
+
+8. Tính số lượng công việc của nhân viên theo mã nhân viên (SP SOCV MANV)
+
+--FUNCTIONS 
+
+9. Cho biết địa chỉ của một nhân viên dựa theo tên nhân viên
+
+10. Truyền vào một mã nhân viên, cho biết họ tên đầy đủ của nhân viên quản lý nhân viên đó
+
+11. Tên công việc của nhân viên cần tìm theo mã nhân viên đó
+
+12. Cho biết tên của thân nhân có quan hệ vợ chồng với nhân viên theo mã
+
+13. Với mã phòng ban cho trước, tính lương trung bình của phòng ban đó
+
+14. Tính giờ công thực hiện để án cúa phòng ban theo mã phòng
+
+15. Cho biết số lượng nhân viên của phòng ban theo mã phòng
+
+16. Họ tên đầy đủ của trưởng phòng cúa nhân viên theo mã nhân viên
+
+17. Cho biết tên đề án của phòng ban chủ trì theo mã phòng ban
+
+18. Tìm những nhân viên theo mã phòng ban có có mức lương cao hơn mức lương cần tìm
+
+19. Tìm danh sách các đề án được thực hiện bởi nhân viên có mã cho trước
+
+20. Tính lương trung bình của phòng ban theo tên phòng
+
+/* TRIGGER */
+
+21. Cài đặt ràng buộc không cho nhân viên có MaNV-1 tham gia đề án số 2
+
+22. Cài đặt ràng buộc sao cho lương của trưởng phòng phải lớn hơn lương của nhân viên
+
+23. Cài đặt ràng buộc sao cho một nhân viên không được tham gia quá 3 đề án
+
+
