@@ -175,7 +175,7 @@ INSERT INTO QuaTrinhMuon (ISBN, Ma_CuonSach, NgayMuon, Ma_DocGia, NgayHetHan, Ng
 ('978-604-5', 'CS005', '2024-03-01', 'DG004', '2024-03-15', '2024-03-15', 8.00, 8.00, 80.00, N'Sách ngoại văn');
 
 
--- 1. Có bao nhiêu phiếu mượn sách thư viện trong năm qua? (năm hiện tại là 2026)
+-- 1. Có bao nhiêu phiếu mượn sách thư viện trong năm qua? (năm hiện tại là 2026).
 SELECT COUNT(*) AS SoPhieuMuon 
 FROM QuaTrinhMuon 
 WHERE YEAR(NgayMuon) = 2025;
@@ -202,7 +202,7 @@ JOIN DauSach ds ON qtm.ISBN = ds.ISBN
 JOIN TuaSach ts ON ds.Ma_TuaSach = ts.Ma_TuaSach
 WHERE qtm.NgayTra > qtm.NgayHetHan;
 
--- 6. Cho biết danh sách (độc giả, sách được mượn) những độc giả đã và đang được mượn quá han?
+-- 6. Cho biết danh sách (độc giả, sách được mượn) những độc giả đã và đang được mượn quá haạn?
 SELECT DISTINCT dg.Ma_DocGia, dg.Ho, dg.Ten
 FROM DocGia dg
 LEFT JOIN QuaTrinhMuon qtm ON dg.Ma_DocGia = qtm.Ma_DocGia
@@ -222,104 +222,104 @@ FROM QuaTrinhMuon
 GROUP BY NgayMuon
 ORDER BY SoLuotMuon DESC;
 
--- 9. Tính tống số tiền mượn đã trả trong quá trình mượn sách
+-- 9. Tính tống số tiền mượn đã trả trong quá trình mượn sách.
 SELECT SUM(TienDaTra) AS TongTienDaTra FROM QuaTrinhMuon;
 
--- 10. Tìm số cuốn sách có tình trạng "Hỏng"
+-- 10. Tìm số cuốn sách có tình trạng "Hỏng".
 SELECT COUNT(*) FROM CuonSach WHERE TinhTrang = N'Hỏng';
 
--- 11. Tính số cuốn sách trung bình mỗi độc giả đã mượn
+-- 11. Tính số cuốn sách trung bình mỗi độc giả đã mượn.
 SELECT CAST(COUNT(ISBN) AS FLOAT) / (SELECT COUNT(*) FROM DocGia) AS TB_Sach_DocGia
 FROM QuaTrinhMuon;
 
--- 12. Tìm số lượng sách của từng tác giả
+-- 12. Tìm số lượng sách của từng tác giả.
 SELECT TacGia, COUNT(ISBN) AS SoLuongDauSach
 FROM TuaSach ts 
 JOIN DauSach ds ON ts.Ma_TuaSach = ds.Ma_TuaSach
 GROUP BY TacGia;
 
--- 13. Tìm các tác giả có hơn 5 đầu sách trong thư viện
+-- 13. Tìm các tác giả có hơn 5 đầu sách trong thư viện.
 SELECT TacGia
 FROM TuaSach ts 
 JOIN DauSach ds ON ts.Ma_TuaSach = ds.Ma_TuaSach
 GROUP BY TacGia
 HAVING COUNT(ISBN) > 5;
 
--- 14. Tìm các độc giả đã mượn hơn 3 cuốn sách
+-- 14. Tìm các độc giả đã mượn hơn 3 cuốn sách.
 SELECT Ma_DocGia, COUNT(*) AS SoLanMuon
 FROM QuaTrinhMuon
 GROUP BY Ma_DocGia
 HAVING COUNT(*) > 3;
 
--- 15. Tìm các đầu sách có hơn 2 cuốn sách bị hỏng
+-- 15. Tìm các đầu sách có hơn 2 cuốn sách bị hỏng.
 SELECT ISBN, COUNT(*) AS SoCuonHong
 FROM CuonSach
 WHERE TinhTrang = N'Hỏng'
 GROUP BY ISBN
 HAVING COUNT(*) > 2;
 
--- 16. Tìm độc giả đã đăng ký mượn hơn 2 cuốn sách
+-- 16. Tìm độc giả đã đăng ký mượn hơn 2 cuốn sách.
 SELECT Ma_DocGia, COUNT(*) AS SoLuongDangKy
 FROM DangKy
 GROUP BY Ma_DocGia
 HAVING COUNT(*) > 2;
 
--- 17. Tìm các ngày có hơn 3 lượt mượn sách
+-- 17. Tìm các ngày có hơn 3 lượt mượn sách.
 SELECT NgayMuon, COUNT(*) AS SoLuot
 FROM QuaTrinhMuon
 GROUP BY NgayMuon
 HAVING COUNT(*) > 3;
 
--- 18. Tìm độc giả trẻ nhất
+-- 18. Tìm độc giả trẻ nhất.
 SELECT TOP 1 * FROM DocGia ORDER BY NgaySinh DESC;
 
--- 19. Tìm đầu sách có số lượng sách ít nhất
+-- 19. Tìm đầu sách có số lượng sách ít nhất.
 SELECT TOP 1 ISBN, COUNT(*) AS SoLuong
 FROM CuonSach
 GROUP BY ISBN
 ORDER BY SoLuong ASC;
 
--- 20. Tìm độc giả chưa từng mượn sách
+-- 20. Tìm độc giả chưa từng mượn sách.
 SELECT * FROM DocGia 
 WHERE Ma_DocGia NOT IN (SELECT Ma_DocGia FROM QuaTrinhMuon)
   AND Ma_DocGia NOT IN (SELECT Ma_DocGia FROM Muon);
 
--- 21. Tìm sách chưa được ai đăng ký mượn
+-- 21. Tìm sách chưa được ai đăng ký mượn.
 SELECT * FROM DauSach 
 WHERE ISBN NOT IN (SELECT ISBN FROM DangKy);
 
--- 22. Tìm độc giả đã mượn nhưng chưa trả sách
+-- 22. Tìm độc giả đã mượn nhưng chưa trả sách.
 SELECT DISTINCT dg.* FROM DocGia dg
 JOIN Muon m ON dg.Ma_DocGia = m.Ma_DocGia;
 
--- 23. Lấy danh sách tất cả độc giả cả người lớn và trẻ em
+-- 23. Lấy danh sách tất cả độc giả cả người lớn và trẻ em.
 SELECT Ma_DocGia, N'Người lớn' AS Loai FROM NguoiLon
 UNION
 SELECT Ma_DocGia, N'Trẻ em' AS Loai FROM TreEm;
 
--- 24. Lấy danh sách độc gỉa vừa đăng ký vừa mượn sách
+-- 24. Lấy danh sách độc gỉa vừa đăng ký vừa mượn sách.
 SELECT Ma_DocGia FROM DangKy
 INTERSECT
 SELECT Ma_DocGia FROM QuaTrinhMuon;
 
--- 25. Lấy danh sách độc giả chỉ đăng ký nhưng chưa mượn sách
+-- 25. Lấy danh sách độc giả chỉ đăng ký nhưng chưa mượn sách.
 SELECT Ma_DocGia FROM DangKy
 EXCEPT
 (SELECT Ma_DocGia FROM QuaTrinhMuon UNION SELECT Ma_DocGia FROM Muon);
 
--- 26. Cập nhật tình trạng sách bị hỏng thành "Đang sửa"
+-- 26. Cập nhật tình trạng sách bị hỏng thành "Đang sửa".
 BEGIN TRANSACTION;
 UPDATE CuonSach SET TinhTrang = N'Đang sửa' WHERE TinhTrang = N'Hỏng';
 SELECT * FROM CuonSach; 
 ROLLBACK; 
 
--- 27. Gia hạn thêm 1 năm cho tất cả độc giả người lớn
+-- 27. Gia hạn thêm 1 năm cho tất cả độc giả người lớn.
 BEGIN TRANSACTION;
 UPDATE NguoiLon SET HanSuDung = DATEADD(year, 1, HanSuDung);
 SELECT * FROM NguoiLon;
 ROLLBACK;
 
--- 28. Xóa tất cá độc giả chưa từng mượn sách
+-- 28. Xóa tất cá độc giả chưa từng mượn sách.
 BEGIN TRANSACTION;
 DELETE FROM NguoiLon WHERE Ma_DocGia NOT IN (SELECT Ma_DocGia FROM QuaTrinhMuon) AND Ma_DocGia NOT IN (SELECT Ma_DocGia FROM Muon);
 DELETE FROM TreEm WHERE Ma_DocGia NOT IN (SELECT Ma_DocGia FROM QuaTrinhMuon) AND Ma_DocGia NOT IN (SELECT Ma_DocGia FROM Muon);
@@ -327,19 +327,19 @@ DELETE FROM DocGia WHERE Ma_DocGia NOT IN (SELECT Ma_DocGia FROM QuaTrinhMuon) A
 SELECT * FROM DocGia;
 ROLLBACK;
 
--- 29. Cập nhật số điện thoại của độc giả có mã số là 5 thành 0909123456
+-- 29. Cập nhật số điện thoại của độc giả có mã số là 5 thành 0909123456.
 BEGIN TRANSACTION;
 UPDATE NguoiLon SET DienThoai = '0909123456' WHERE Ma_DocGia = 'DG005';
 SELECT * FROM NguoiLon WHERE Ma_DocGia = 'DG005';
 ROLLBACK;
 
--- 30. Xóa tất cả sách đã bị hỏng
+-- 30. Xóa tất cả sách đã bị hỏng.
 BEGIN TRANSACTION;
 DELETE FROM CuonSach WHERE TinhTrang = N'Hỏng';
 SELECT * FROM CuonSach;
 ROLLBACK;
 
--- 31. Tìm độc giả đã mượn tất cả các đầu sách
+-- 31. Tìm độc giả đã mượn tất cả các đầu sách.
 SELECT Ma_DocGia FROM DocGia dg
 WHERE NOT EXISTS (
     SELECT ISBN FROM DauSach
@@ -347,7 +347,7 @@ WHERE NOT EXISTS (
     SELECT ISBN FROM QuaTrinhMuon qtm WHERE qtm.Ma_DocGia = dg.Ma_DocGia
 );
 
--- 32. Tìm độc giả đã đăng ký mượn tất cả các đầu sách
+-- 32. Tìm độc giả đã đăng ký mượn tất cả các đầu sách.
 SELECT Ma_DocGia FROM DocGia dg
 WHERE NOT EXISTS (
     SELECT ISBN FROM DauSach
@@ -355,14 +355,14 @@ WHERE NOT EXISTS (
     SELECT ISBN FROM DangKy dk WHERE dk.Ma_DocGia = dg.Ma_DocGia
 );
 
--- 33. Liệt kê top 5 bạn dọc mượn sách nhiều nhất trong năm 2024
+-- 33. Liệt kê top 5 bạn dọc mượn sách nhiều nhất trong năm 2024.
 SELECT TOP 5 Ma_DocGia, COUNT(*) AS SoLanMuon
 FROM QuaTrinhMuon
 WHERE YEAR(NgayMuon) = 2024
 GROUP BY Ma_DocGia
 ORDER BY SoLanMuon DESC;
 
--- 34. Liệt kê thể loại sách được mượn nhiều nhất trong quý 1 năm 2025
+-- 34. Liệt kê thể loại sách được mượn nhiều nhất trong quý 1 năm 2025.
 SELECT TOP 1 ds.NgonNgu, COUNT(*) AS SoLuotMuon
 FROM QuaTrinhMuon qtm
 JOIN DauSach ds ON qtm.ISBN = ds.ISBN
@@ -370,14 +370,14 @@ WHERE YEAR(qtm.NgayMuon) = 2024 AND DATEPART(quarter, qtm.NgayMuon) = 1
 GROUP BY ds.NgonNgu
 ORDER BY SoLuotMuon DESC;
 
--- 35. Tìm bạn đọc trả sách trễ nhiều lần nhất (Tính số lần NgayTra > HanTra cho từng bạn đọc, lọc ra top đầu COUNT(CASE WHEN ... THEN 1 END))
+-- 35. Tìm bạn đọc trả sách trễ nhiều lần nhất (Tính số lần NgayTra > HanTra cho từng bạn đọc, lọc ra top đầu COUNT(CASE WHEN ... THEN 1 END)).
 SELECT TOP 1 Ma_DocGia, COUNT(*) AS SoLanTre
 FROM QuaTrinhMuon
 WHERE NgayTra > NgayHetHan
 GROUP BY Ma_DocGia
 ORDER BY SoLanTre DESC;
 
--- 36. Tìm những bạn đọc mượn đủ tất cả sách cùa tác giả "Nguyễn Nhật Ánh"
+-- 36. Tìm những bạn đọc mượn đủ tất cả sách cùa tác giả "Nguyễn Nhật Ánh".
 SELECT Ma_DocGia FROM DocGia dg
 WHERE NOT EXISTS (
     SELECT ISBN FROM DauSach ds 
@@ -387,7 +387,7 @@ WHERE NOT EXISTS (
     SELECT ISBN FROM QuaTrinhMuon qtm WHERE qtm.Ma_DocGia = dg.Ma_DocGia
 );
 
--- 37. Danh sách bạn đọc chưa mượn quyển sách nào kể từ khi đăng ký
+-- 37. Danh sách bạn đọc chưa mượn quyển sách nào kể từ khi đăng ký.
 SELECT DISTINCT dg.*
 FROM DocGia dg
 JOIN DangKy dk ON dg.Ma_DocGia = dk.Ma_DocGia
@@ -404,14 +404,14 @@ Tạo các store procedure như sau
 */
 
 /*
-4.1. Xem thông tin độc giả
+4.1. Xem thông tin độc giả:
 Tên: sp_ThongtinDocGia
 Nội dung: Liệt kê những thông tin của độc giả tương ứng với mã độc giả. 
-Nếu độc già là người lốn thì hiền thị thông tin độc giả + thông tin trong bàng người lớn.
-Nếu độc giả là trẻ em thì hiền thị những thông tin độc giả + thông tin của bảng trẻ em.
-Các bước thực hiện
+Nếu độc già là người lớn thì hiền thị thông tin độc giả + thông tin trong bảng người lớn.
+Nếu độc giả là trẻ em thì hiển thị những thông tin độc giả + thông tin của bảng trẻ em.
+Các bước thực hiện:
 [1] Kiểm tra độc giả này thuộc loại người lớn hay trẻ em.
-[2] Nếu là người lớn thì in những thông tin liên quan đên độc giả này, gôm có: thông tin độc giả + thông tín người lớn.
+[2] Nếu là người lớn thì in những thông tin liên quan đên độc giả này, gôm có: thông tin độc giả + thông tin người lớn.
 [3] Nếu là trẻ em thì in những thông tin liên quan đến độc giả này, gồm có: thông tin độc giả + thông tin trẻ em.
 */
 
@@ -436,7 +436,7 @@ BEGIN
 END
 
 /*
-4.2. Thông tin đầu sách
+4.2. Thông tin đầu sách:
 Tên: sp_ThongtinDausach
 Nội dung: Liệt kê những thông tin của đầu sách, thông tin tựa sách và số lượng sách hiện chưa được mượn của một đầu sách cụ thể (ISBN).
 */
@@ -455,7 +455,7 @@ BEGIN
 END
 
 /*
-4.3. Liệt kê những độc giả người lớn đang mượn sách
+4.3. Liệt kê những độc giả người lớn đang mượn sách:
 Tên: sp_ThongtinNguoilonDangmuon
 Nội dung: Liệt kê những thông tin của tất cá độc giả đang mượn sách của thư viện
 */
@@ -470,9 +470,9 @@ BEGIN
 END
 
 /*
-4.4. Liệt kê những độc giả người lớn đang mượn sách quá hạn
+4.4. Liệt kê những độc giả người lớn đang mượn sách quá hạn:
 Tên: sp_ThongtinNguoilonQuahan
-Nội dụng: Liệt kê những thông tin cùa tất cá độc giả đang mượn sách của thư viện đang trong tình trạng mượn quá hạn 14 ngày.
+Nội dụng: Liệt kê những thông tin cùa tất cả độc giả đang mượn sách của thư viện đang trong tình trạng mượn quá hạn 14 ngày.
 */
 
 CREATE OR ALTER PROC sp_ThongtinNguoilonQuahan
@@ -486,7 +486,7 @@ BEGIN
 END
 
 /*
-4.5. Liệt kê những độc giả người lớn đang mượn sách có trẻ em cũng đang mượn sách
+4.5. Liệt kê những độc giả người lớn đang mượn sách có trẻ em cũng đang mượn sách:
 Tên: sp_DocGiaCoTreEmMuon
 Nội dung: Liệt kê những những độc giả đang trong tình trạng mượn sách và những trè em độc giả này đang bảo lãnh cũng đang trong tình trạng mượn sách.
 */
@@ -502,7 +502,7 @@ BEGIN
 END
 
 /*
-4.6. Cập nhật trạng thái của đầu sách
+4.6. Cập nhật trạng thái của đầu sách:
 Nội dung: Cập nhật trạng thái của một đầu sách cu thế tương ứng với isbn: nếu đầu sách không còn cuốn sách nào trong thư viện thì tình trạng là no; 
 nếu đầu sách còn một quyền sách trở lên thì tình trạng là 'Y'
 Tên: sp_CapnhatTrangthaiDausach
@@ -527,7 +527,7 @@ BEGIN
 END
 
 /*
-4.7. Thêm tựa sách mới
+4.7. Thêm tựa sách mới:
 Tên: sp_ThemTuaSach
 Nội dung: Thêm tựa sách vào hệ thống với điều kiên là bộ 3 thuộc tính tựa sách, tác giả, tóm tắt phải khác với các bộ trong bảng tựa sách đã có.
 Và phải bảo đảm quy định QĐ-1 được tuân thủ.
@@ -535,7 +535,7 @@ Bước thưc hiện
 [1] Xác định mã tựa sách sẽ cấp cho tựa sách này thỏa quy định QĐ-1
 [2] Kiểm tra phải có ít nhất 1 trong 3 thuộc tính tựa sách, tác giả, tóm tắt khác với các bộ trong bảng tựa sách đã có.
 [3] Nếu thỏa điều kiện này thì: Thêm vào tựa sách
-[4] Nếu không thỏa điều kiện thì: Thông báo lỗi và chắm dứt stored procedure.
+[4] Nếu không thỏa điều kiện thì: Thông báo lỗi và chấm dứt stored procedure.
 */
 
 CREATE OR ALTER PROC sp_ThemTuaSach
@@ -555,7 +555,7 @@ END
 
 
 /*
-4.8. Thêm cuốn sách mới
+4.8. Thêm cuốn sách mới:
 Tên: sp_ThemCuonSach
 Nôi dung: Thêm cuốn sách vào hệ thống với điều kiện phải bảo đảm quy định QĐ-2 được tuân thủ. Và phải cập nhất trạng thái của đầu sách.
 Bước thưc hiện 
@@ -581,7 +581,7 @@ BEGIN
 END
 
 /*
-4.9. Thêm độc giả người lớn
+4.9. Thêm độc giả người lớn:
 Tên: sp_ThemNguoilon
 Nội dung: thêm thông tin mới vào bảng dữ liệu người lớn và bảng dữ liệu độc giả của hệ thống.
 Bước thực hiện
@@ -617,10 +617,10 @@ BEGIN
 END
 
 /*
-4.10. Thêm độc giả trẻ em
+4.10. Thêm độc giả trẻ em:
 Tên: sp_ThemTreEm
 Nội dung: thêm thông tin mới vào bằng dữ liệu trẻ em và bảng dữ liệu độc giả trong hệ thống.
-Bước thực hiện 
+Bước thực hiện:
 [1] Xác định mã độc giả sẽ cấp cho độc giả trẻ em này thỏa quy định QĐ-2.
 [2] Thêm một bộ dữ liệu vào bảng độc giả.
 [3] Đếm số trẻ em của độc giả người lớn bảo lãnh trẻ em mới này.
@@ -685,13 +685,13 @@ BEGIN
 END
 
 /*
-4.11. Xóa độc giả
+4.11. Xóa độc giả:
 Tên: sp_XoaDocGia
 Nội dung: Xóa toàn bộ thông tin liên quan đến độc giả này gồm có: quá trình mượn, đăng ký, mượn, độc giả, 
 người lớn (nếu độc giả này là người lớn), 
 trẻ em (nếu độc giả là trè em hay độc giả người lớn có bảo lãnh trẻ em). 
 Chỉ thực hiện xóa khi độc giả không đang mượn sách.
-Bước thực hiện
+Bước thực hiện:
 [1] Kiểm tra xem độc giả có tồn tại hay không.
 Nếu độc giả không tồn tại thì thông báo không tôn tại độc giả và kết thúc. 
 [2] Kiểm tra độc giả có đang mượng sách hay khôn. Nếu độc giả có mượn sách thì thông báo không thể xóa được và kết thúc. 
@@ -773,12 +773,12 @@ FROM DocGia
 WHERE Ma_DocGia = 'DG001';
 
 /*
-4.12. Mượn sách
+4.12. Mượn sách:
 Tên: sp_MuonSach
 Nội dung: Kiểm tra cuốn sách cùng loại này có đang được mượn bởi độc giả này hay không. Nếu không, kiểm tra xem cuốn sách này còn quyền nào trong thư viện chưa được ai mượn không. Nếu được thì thực hiện việc mượn. 
 Còn nếu không thì thực hiện việc đăng ký phải chú ý đảm bảo kiểm tra số lượng sách đang mượn của độc giả này. Nếu là độc giả người lớn thì phải thỏa quy định QĐ-4; nếu là độc giả trẻ em thì phải quy định QĐ-5.
 Và đặc biệt đối với độc giả người lớn thì phải bảo đảm QĐ-6 cũng phải được tuân thủ.
-Bước thực hiện
+Bước thực hiện:
 [1] Kiểm tra độc giả có đang mượn quyền sách cùng loại không"? Nếu có:
 	[1.1] báo lỗi
 	[1.2] return
@@ -864,7 +864,7 @@ SELECT *
 FROM DangKy
 
 /*
-4.13. Trả sách
+4.13. Trả sách:
 Tên: sp_TraSach
 Nội dung: Khi độc giả trả sách thì hệ thống phải chuyền thông tin mượn sang bảng quá trình mượn.
 Bước thưc hiện:
@@ -1000,7 +1000,7 @@ BEGIN
 END
 
 /*
-4.15. Tg_themtuasach
+4.15. Tg_themtuasach:
 Khi thêm mới một tựa sách thì kiểm tra xem đã có tựa sách trùng tên với tựa sách vừa được thêm hay không:
 Đưa ra thông báo vẫn cho insert.
 Thông báo và không cho insert.

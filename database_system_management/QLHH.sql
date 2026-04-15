@@ -204,69 +204,46 @@ VALUES
 ('HD10', 'MH10',  185000, 3, 0.05),
 ('HD10', 'MH07', 2550000, 2, 0.06)
 
--- Bai tap truy van
+-- Bai tap chuong 4
 
--- 1. Cho biết danh sách các đối tác cung cấp hàng cho công ty
-SELECT * 
-FROM NHACUNGCAP
+-- 1. Cho biết danh sách các đối tác cung cấp hàng cho công ty.
+SELECT *  FROM NHACUNGCAP
 
--- 2. Cho biết mã hàng, tên hàng và số lượng của các mặt hàng hiện có trong công ty
-SELECT MAHANG, TENHANG, SOLUONG
-FROM MATHANG 
+-- 2. Cho biết mã hàng, tên hàng và số lượng của các mặt hàng hiện có trong công ty.
+SELECT MAHANG, TENHANG, SOLUONG FROM MATHANG
 
--- 3. Cho biết họ tên và địa chỉ và năm bắt đầu làm việc của các nhân viên trong công ty
-SELECT HO, TEN, DIACHI, NGAYLAMVIEC
-FROM NHANVIEN
+-- 3. Cho biết họ tên và địa chỉ và năm bắt đầu làm việc của các nhân viên trong công ty.
+SELECT HO, TEN, DIACHI, NGAYLAMVIEC FROM NHANVIEN
 
--- 4. Cho biết địa chỉ và điện thoại của nhà cung cấp có tên giao dịch VINAMILK là gì
-SELECT DIACHI, DIENTHOAI
-FROM NHACUNGCAP
-WHERE TENGIAODICH = 'VINAMILK'
+-- 4. Cho biết địa chỉ và điện thoại của nhà cung cấp có tên giao dịch VINAMILK là gì.
+SELECT DIACHI, DIENTHOAI FROM NHACUNGCAP WHERE TENGIAODICH = 'VINAMILK'
 
--- 5. Cho biết mã và tên của các mặt hàng có giá > 100000 và số lượng hiện có ít hơn 50
-SELECT MAHANG, TENHANG
-FROM MATHANG
-WHERE GIAHANG > 100000 AND SOLUONG < 50
+-- 5. Cho biết mã và tên của các mặt hàng có giá > 100000 và số lượng hiện có ít hơn 50.
+SELECT MAHANG, TENHAN FROM MATHANG WHERE GIAHANG > 100000 AND SOLUONG < 50
 
--- 6. Công ty Việt Tiến đã cung cấp những mặt hàng nào
-SELECT TENLOAIHANG
-FROM NHACUNGCAP
-JOIN MATHANG ON NHACUNGCAP.MACONGTY = MATHANG.MACONGTY
-JOIN LOAIHANG ON LOAIHANG.MALOAIHANG = MATHANG.MALOAIHANG
-WHERE TENCONGTY LIKE N'%Việt Tiến%'
+-- 6. Công ty Việt Tiến đã cung cấp những mặt hàng nào.
+SELECT TENLOAIHANG FROM NHACUNGCAP JOIN MATHANG ON NHACUNGCAP.MACONGTY = MATHANG.MACONGTY JOIN LOAIHANG ON LOAIHANG.MALOAIHANG = MATHANG.MALOAIHANG WHERE TENCONGTY LIKE N'%Việt Tiến%'
 
--- 7. Loại hàng thực phẩm do các công ty nào cung cấp và địa chỉ của các công ty đó là gì
-SELECT TENCONGTY, DIACHI
-FROM NHACUNGCAP
-JOIN MATHANG ON NHACUNGCAP.MACONGTY = MATHANG.MACONGTY
-JOIN LOAIHANG ON MATHANG.MALOAIHANG = LOAIHANG.MALOAIHANG
-WHERE TENLOAIHANG = N'thực phẩm' 
+-- 7. Loại hàng thực phẩm do các công ty nào cung cấp và địa chỉ của các công ty đó là gì.
+SELECT TENCONGTY, DIACHI FROM NHACUNGCAP JOIN MATHANG ON NHACUNGCAP.MACONGTY = MATHANG.MACONGTY JOIN LOAIHANG ON MATHANG.MALOAIHANG = LOAIHANG.MALOAIHANG WHERE TENLOAIHANG = N'thực phẩm' 
 
--- 8. Những khách hàng nào (tên giao dịch) đã đặt mua mặt hàng Sữa hộp XYZ
-SELECT TENGIAODICH
-FROM KHACHHANG
-JOIN DONDATHANG ON KHACHHANG.MAKHACHHANG = DONDATHANG.MAKHACHHANG
-JOIN CTDATHANG ON DONDATHANG.SOHOADON = CTDATHANG.SOHOADON
-JOIN MATHANG ON CTDATHANG.MAHANG = MATHANG.MAHANG
-WHERE TENHANG = N'Sữa hộp XYZ'
+-- 8. Những khách hàng nào (tên giao dịch) đã đặt mua mặt hàng Sữa hộp XYZ.
+SELECT TENGIAODICH FROM KHACHHANG JOIN DONDATHANG ON KHACHHANG.MAKHACHHANG = DONDATHANG.MAKHACHHANG JOIN CTDATHANG ON DONDATHANG.SOHOADON = CTDATHANG.SOHOADON JOIN MATHANG ON CTDATHANG.MAHANG = MATHANG.MAHANG WHERE TENHANG = N'Sữa hộp XYZ'
 
--- 9. Cho biết đơn đặt hàng số 1 do ai đặt và do nhân viên nào lập, thời gian và địa điểm giao hàng là ở đâu
-SELECT MAKHACHHANG, MANHANVIEN, NGAYGIAOHANG, NOIGIAOHANG
-FROM DONDATHANG
-WHERE SOHOADON = 'HD01'
+-- 9. Cho biết đơn đặt hàng số 1 do ai đặt và do nhân viên nào lập, thời gian và địa điểm giao hàng là ở đâu.
+SELECT MAKHACHHANG, MANHANVIEN, NGAYGIAOHANG, NOIGIAOHANG FROM DONDATHANG WHERE SOHOADON = 'HD01'
 
--- 10. Cho biết số tiền lương mà công ty phải trả cho mỗi nhân viên là bao nhiêu (lương = lương cơ bản + phụ cấp)
-SELECT MANHANVIEN, LUONGCOBAN + PHUCAP AS LUONG
-FROM NHANVIEN
+-- 10. Cho biết số tiền lương mà công ty phải trả cho mỗi nhân viên là bao nhiêu (lương = lương cơ bản + phụ cấp).
+SELECT MANHANVIEN, LUONGCOBAN + PHUCAP AS LUONG FROM NHANVIEN
 
--- 11. Cho biết đơn đặt hàng số 3 đã đặt mua những mặt hàng nào và số tiền mà khách hàng phải trả cho mỗi mặt hàng là bao nhiêu (TIENPHAITRA = SOLUONG X GIABAN - SOLUONG X GIABAN X MUCGIAMGIA / 100)
+-- 11. Cho biết đơn đặt hàng số 3 đã đặt mua những mặt hàng nào và số tiền mà khách hàng phải trả cho mỗi mặt hàng là bao nhiêu (TIENPHAITRA = SOLUONG X GIABAN - SOLUONG X GIABAN X MUCGIAMGIA / 100).
 SELECT CTDATHANG.MAHANG, TENLOAIHANG, CTDATHANG.SOLUONG * GIABAN - CTDATHANG.SOLUONG * GIABAN * MUCGIAMGIA / 100 AS TIENPHAITRA
 FROM CTDATHANG
 JOIN MATHANG ON CTDATHANG.MAHANG = MATHANG.MAHANG
 JOIN LOAIHANG ON MATHANG.MALOAIHANG = LOAIHANG.MALOAIHANG
 WHERE SOHOADON = 'HD03'
 
--- 12. Hãy cho biết những khách hàng nào lại chính là đối tác cung cấp hàng cho công ty (tức là có cùng tên giao dịch)
+-- 12. Hãy cho biết những khách hàng nào lại chính là đối tác cung cấp hàng cho công ty (tức là có cùng tên giao dịch).
 SELECT *
 FROM KHACHHANG
 JOIN DONDATHANG ON KHACHHANG.MAKHACHHANG = DONDATHANG.MAKHACHHANG
@@ -275,44 +252,39 @@ JOIN MATHANG ON CTDATHANG.MAHANG = MATHANG.MAHANG
 JOIN NHACUNGCAP ON MATHANG.MACONGTY = NHACUNGCAP.MACONGTY
 WHERE KHACHHANG.TENGIAODICH = NHACUNGCAP.TENGIAODICH
 
--- 13. Trong công ty có những nhân viên nào có cùng ngày sinh
-SELECT * FROM NHANVIEN 
-WHERE NGAYSINH IN (SELECT NGAYSINH FROM NHANVIEN GROUP BY NGAYSINH HAVING COUNT(*) > 1); --
+-- 13. Trong công ty có những nhân viên nào có cùng ngày sinh.
+SELECT * FROM NHANVIEN WHERE NGAYSINH IN (SELECT NGAYSINH FROM NHANVIEN GROUP BY NGAYSINH HAVING COUNT(*) > 1); 
 
--- 14. Những đơn đặt hàng nào yêu cầu giao hàng ngay tại công ty đặt hàng và những đơn đó là của công ty nào
-SELECT ddh.*, kh.TENCONGTY 
-FROM DONDATHANG ddh
-JOIN KHACHHANG kh ON ddh.MAKHACHHANG = kh.MAKHACHHANG
-WHERE ddh.NOIGIAOHANG = kh.DIACHI; --
+-- 14. Những đơn đặt hàng nào yêu cầu giao hàng ngay tại công ty đặt hàng và những đơn đó là của công ty nào.
+SELECT DDH.*, KH.TENCONGTY  FROM DONDATHANG DDH JOIN KHACHHANG KH ON ddh.MAKHACHHANG = KH.MAKHACHHANG WHERE DDH.NOIGIAOHANG = KH.DIACHI; 
 
--- 15. Cho biết tên công ty, tên giao dịch, địa chỉ và điện thoại của các khách hàng và các nhà cung cấp hàng cho công ty
+-- 15. Cho biết tên công ty, tên giao dịch, địa chỉ và điện thoại của các khách hàng và các nhà cung cấp hàng cho công ty.
 SELECT TENCONGTY, TENGIAODICH, DIACHI, DIENTHOAI
 FROM KHACHHANG
 UNION
 SELECT TENCONGTY, TENGIAODICH, DIACHI, DIENTHOAI
 FROM NHACUNGCAP
 
--- 16. Những mặt hàng nào chưa từng được khách hàng mua
+-- 16. Những mặt hàng nào chưa từng được khách hàng mua.
 SELECT MAHANG
 FROM MATHANG
 EXCEPT 
 SELECT MAHANG
 FROM CTDATHANG
 
--- 17. Những nhân viên nào của công ty chưa từng lập bất kỳ một hóa đơn đặt hàng nào 
+-- 17. Những nhân viên nào của công ty chưa từng lập bất kỳ một hóa đơn đặt hàng nào.
 SELECT * FROM NHANVIEN WHERE MANHANVIEN NOT IN (SELECT MANHANVIEN FROM DONDATHANG); 
 
--- 18. Những nhân viên nào của công ty có lương cơ bản cao nhất 
+-- 18. Những nhân viên nào của công ty có lương cơ bản cao nhất.
 SELECT TOP 1 WITH TIES NV.MANHANVIEN, MAX(LUONGCOBAN) AS LUONGCB  
 FROM NHANVIEN NV 
 GROUP BY NV.MANHANVIEN
 ORDER BY LUONGCB DESC 
 
--- 19. Tổng số tiền mà khách hàng phải trả cho mỗi đơn đặt hàng là bao nhiêu
-SELECT MAHANG, GIABAN*(1-MUCGIAMGIA)*SOLUONG AS TONGTIENTRA 
-FROM CTDATHANG 
+-- 19. Tổng số tiền mà khách hàng phải trả cho mỗi đơn đặt hàng là bao nhiêu.
+SELECT MAHANG, GIABAN*(1-MUCGIAMGIA)*SOLUONG AS TONGTIENTRA FROM CTDATHANG 
 
--- 20. Trong năm 2021, những mặt hàng nào chỉ được đặt mua đúng một lần
+-- 20. Trong năm 2021, những mặt hàng nào chỉ được đặt mua đúng một lần.
 SELECT MH.MAHANG, COUNT(DH.SOHOADON) 
 FROM DONDATHANG DH
 JOIN CTDATHANG CT ON CT.SOHOADON = DH.SOHOADON
@@ -326,40 +298,38 @@ FROM DONDATHANG DH
 JOIN CTDATHANG CT ON DH.SOHOADON = CT.SOHOADON
 GROUP BY MAKHACHHANG 
 
--- 22. Mỗi một nhân viên của công ty đã lập bao nhiêu đơn đặt hàng (nếu nhân viên chưa hề lập một hoá đơn nào thì cho kết quả là 0)
+-- 22. Mỗi một nhân viên của công ty đã lập bao nhiêu đơn đặt hàng (nếu nhân viên chưa hề lập một hoá đơn nào thì cho kết quả là 0).
 SELECT NV.MANHANVIEN, COUNT(SOHOADON) AS SODON 
 FROM NHANVIEN NV
 JOIN DONDATHANG DH ON NV.MANHANVIEN = DH.MANHANVIEN
 GROUP BY NV.MANHANVIEN 
 
--- 23. Cho biết tổng số tiền hàng mà cửa hàng thu được trong mỗi tháng của năm 2025 (thời được gian tính theo ngày đặt hàng)
-SELECT MONTH(NGAYDATHANG) AS THANG, SUM(ct.SOLUONG * ct.GIABAN * (1 - ct.MUCGIAMGIA)) AS DOANH_THU
-FROM DONDATHANG ddh
-JOIN CTDATHANG ct ON ddh.SOHOADON = ct.SOHOADON
+-- 23. Cho biết tổng số tiền hàng mà cửa hàng thu được trong mỗi tháng của năm 2025 (thời được gian tính theo ngày đặt hàng).
+SELECT MONTH(NGAYDATHANG) AS THANG, SUM(CT.SOLUONG * CT.GIABAN * (1 - CT.MUCGIAMGIA)) AS DOANH_THU
+FROM DONDATHANG DDH
+JOIN CTDATHANG CT ON DDH.SOHOADON = CT.SOHOADON
 WHERE YEAR(NGAYDATHANG) = 2025
 GROUP BY MONTH(NGAYDATHANG); 
 
--- 24. Hãy cho biết tồng số tiền lời mà công ty thu được từ mỗi mặt hàng trong năm 2025
-SELECT mh.MAHANG, mh.TENHANG, 
-       SUM(ct.SOLUONG * (ct.GIABAN - mh.GIAHANG)) AS LOI_NHUAN
-FROM MATHANG mh
-JOIN CTDATHANG ct ON mh.MAHANG = ct.MAHANG
-JOIN DONDATHANG ddh ON ct.SOHOADON = ddh.SOHOADON
-WHERE YEAR(ddh.NGAYDATHANG) = 2025
-GROUP BY mh.MAHANG, mh.TENHANG; 
+-- 24. Hãy cho biết tồng số tiền lời mà công ty thu được từ mỗi mặt hàng trong năm 2025.
+SELECT MH.MAHANG, MH.TENHANG, SUM(CT.SOLUONG * (CT.GIABAN - MH.GIAHANG)) AS LOI_NHUAN
+FROM MATHANG MH
+JOIN CTDATHANG CT ON MH.MAHANG = CT.MAHANG
+JOIN DONDATHANG DDH ON CT.SOHOADON = DDH.SOHOADON
+WHERE YEAR(DDH.NGAYDATHANG) = 2025
+GROUP BY MH.MAHANG, MH.TENHANG; 
 
--- 25. Hãy cho biết tổng số lượng hàng của môi mặt hàng mà công ty đã có (tổng số lượng hàng hiên có và đã bán)
-SELECT mh.MAHANG, mh.TENHANG, 
-       (mh.SOLUONG + COALESCE(SUM(ct.SOLUONG), 0)) AS TONG_TON_KHO
-FROM MATHANG mh
-LEFT JOIN CTDATHANG ct ON mh.MAHANG = ct.MAHANG
-GROUP BY mh.MAHANG, mh.TENHANG, mh.SOLUONG; 
+-- 25. Hãy cho biết tổng số lượng hàng của môi mặt hàng mà công ty đã có (tổng số lượng hàng hiên có và đã bán).
+SELECT MH.MAHANG, MH.TENHANG, (MH.SOLUONG + COALESCE(SUM(CT.SOLUONG), 0)) AS TONG_TON_KHO
+FROM MATHANG MH
+LEFT JOIN CTDATHANG CT ON MH.MAHANG = CT.MAHANG
+GROUP BY MH.MAHANG, MH.TENHANG, MH.SOLUONG; 
 
--- 26. Nhân viên nào của công ty bán được số lượng mặt hàng nhiều nhất và số lượng mặt hàng bán được của những nhân viên này là bao nhiêu
-SELECT TOP 1 WITH TIES nv.MANHANVIEN, nv.HO, nv.TEN, SUM(ct.SOLUONG) AS TONG_SL
-FROM NHANVIEN nv
-JOIN DONDATHANG ddh ON nv.MANHANVIEN = ddh.MANHANVIEN
-JOIN CTDATHANG ct ON ddh.SOHOADON = ct.SOHOADON
+-- 26. Nhân viên nào của công ty bán được số lượng mặt hàng nhiều nhất và số lượng mặt hàng bán được của những nhân viên này là bao nhiêu.
+SELECT TOP 1 WITH TIES NV.MANHANVIEN, NV.HO, NV.TEN, SUM(ct.SOLUONG) AS TONG_SL
+FROM NHANVIEN NV
+JOIN DONDATHANG DDH ON NV.MANHANVIEN = DDH.MANHANVIEN
+JOIN CTDATHANG CT ON DDH.SOHOADON = CT.SOHOADON
 GROUP BY nv.MANHANVIEN, nv.HO, nv.TEN
 ORDER BY TONG_SL DESC; 
 
@@ -372,117 +342,117 @@ ORDER BY TONG_SL ASC;
 -- 28. Số tiền nhiều nhất mà mỗi khách hàng đà từng bỏ ra để đặt hàng trong các đơn đặt hàng là bao nhiêu?
 SELECT MAKHACHHANG, MAX(TIEN_DH) AS MAX_DON_HANG
 FROM (
-    SELECT ddh.MAKHACHHANG, ddh.SOHOADON, SUM(ct.SOLUONG * ct.GIABAN * (1 - ct.MUCGIAMGIA)) AS TIEN_DH
-    FROM DONDATHANG ddh
-    JOIN CTDATHANG ct ON ddh.SOHOADON = ct.SOHOADON
-    GROUP BY ddh.MAKHACHHANG, ddh.SOHOADON
+    SELECT DDH.MAKHACHHANG, DDH.SOHOADON, SUM(CT.SOLUONG * CT.GIABAN * (1 - CT.MUCGIAMGIA)) AS TIEN_DH
+    FROM DONDATHANG DDH
+    JOIN CTDATHANG CT ON DDH.SOHOADON = CT.SOHOADON
+    GROUP BY DDH.MAKHACHHANG, DDH.SOHOADON
 ) AS T
 GROUP BY MAKHACHHANG; 
 
 -- 29. Thống kê xem mỗi mặt hàng trong mỗi tháng và trong cả năm 2025, bán được với số lượng bao nhiêu. Kết quả được hiền thị dưới dạng bảng, hai cột đầu là mã hàng và tên hàng, các cột còn lại tương ứng với các tháng từ 1 đến 12 và cả năm.
-SELECT mh.MAHANG, mh.TENHANG,
-    SUM(CASE WHEN MONTH(NGAYDATHANG) = 1 THEN ct.SOLUONG ELSE 0 END) AS T1,
-    SUM(CASE WHEN MONTH(NGAYDATHANG) = 2 THEN ct.SOLUONG ELSE 0 END) AS T2,
-    SUM(CASE WHEN MONTH(NGAYDATHANG) = 3 THEN ct.SOLUONG ELSE 0 END) AS T3,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 4 THEN ct.SOLUONG ELSE 0 END) AS T4,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 5 THEN ct.SOLUONG ELSE 0 END) AS T5,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 6 THEN ct.SOLUONG ELSE 0 END) AS T6,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 7 THEN ct.SOLUONG ELSE 0 END) AS T7,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 8 THEN ct.SOLUONG ELSE 0 END) AS T8,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 9 THEN ct.SOLUONG ELSE 0 END) AS T9,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 10 THEN ct.SOLUONG ELSE 0 END) AS T10,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 11 THEN ct.SOLUONG ELSE 0 END) AS T11,
-	SUM(CASE WHEN MONTH(NGAYDATHANG) = 12 THEN ct.SOLUONG ELSE 0 END) AS T12,
-    SUM(ct.SOLUONG) AS CA_NAM
-FROM MATHANG mh
-LEFT JOIN CTDATHANG ct ON mh.MAHANG = ct.MAHANG
-LEFT JOIN DONDATHANG ddh ON ct.SOHOADON = ddh.SOHOADON AND YEAR(NGAYDATHANG) = 2025
-GROUP BY mh.MAHANG, mh.TENHANG; 
+SELECT MH.MAHANG, MH.TENHANG,
+    SUM(CASE WHEN MONTH(NGAYDATHANG) = 1 THEN CT.SOLUONG ELSE 0 END) AS T1,
+    SUM(CASE WHEN MONTH(NGAYDATHANG) = 2 THEN CT.SOLUONG ELSE 0 END) AS T2,
+    SUM(CASE WHEN MONTH(NGAYDATHANG) = 3 THEN CT.SOLUONG ELSE 0 END) AS T3,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 4 THEN CT.SOLUONG ELSE 0 END) AS T4,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 5 THEN CT.SOLUONG ELSE 0 END) AS T5,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 6 THEN CT.SOLUONG ELSE 0 END) AS T6,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 7 THEN CT.SOLUONG ELSE 0 END) AS T7,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 8 THEN CT.SOLUONG ELSE 0 END) AS T8,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 9 THEN CT.SOLUONG ELSE 0 END) AS T9,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 10 THEN CT.SOLUONG ELSE 0 END) AS T10,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 11 THEN CT.SOLUONG ELSE 0 END) AS T11,
+	SUM(CASE WHEN MONTH(NGAYDATHANG) = 12 THEN CT.SOLUONG ELSE 0 END) AS T12,
+    SUM(CT.SOLUONG) AS CA_NAM
+FROM MATHANG MH
+LEFT JOIN CTDATHANG CT ON MH.MAHANG = CT.MAHANG
+LEFT JOIN DONDATHANG DDH ON CT.SOHOADON = DDH.SOHOADON AND YEAR(NGAYDATHANG) = 2025
+GROUP BY MH.MAHANG, MH.TENHANG; 
 
--- 30. Cập nhật lại giá trị trường NGAYCHUYENHANG của những bản ghi có NGAYCHUYENHANG chưa xác định (NULL) trong bảng DONDATHANG bằng với giá trị của trường NGAYDATHANG  
-BEGIN TRANSACTION;
+-- 30. Cập nhật lại giá trị trường NGAYCHUYENHANG của những bản ghi có NGAYCHUYENHANG chưa xác định (NULL) trong bảng DONDATHANG bằng với giá trị của trường NGAYDATHANG.
+BEGIN TRANSACTION; 
 UPDATE DONDATHANG SET NGAYCHUYENHANG = NGAYDATHANG WHERE NGAYCHUYENHANG IS NULL; 
 SELECT * FROM DONDATHANG;
 ROLLBACK;
 
--- 31. Tăng số lượng hàng cùa những mặt hàng do công ty VINAMILK cung cáp lên gấp đôi
+-- 31. Tăng số lượng hàng cùa những mặt hàng do công ty VINAMILK cung cáp lên gấp đôi.
 BEGIN TRANSACTION;
 UPDATE MATHANG SET SOLUONG = SOLUONG * 2 
 WHERE MACONGTY IN (SELECT MACONGTY FROM NHACUNGCAP WHERE TENGIAODICH = 'VINAMILK'); 
 SELECT * FROM MATHANG;
 ROLLBACK;
 
--- 32. Cập nhật giá trị của trường NOIGIAOHANG trong bảng DONDATHANG bằng địa chỉ của khách hàng đối với những đơn đặt hàng chưa xác định được nơi giao hàng (giá trị trường NOIGIAOHANG bằng NULL)
+-- 32. Cập nhật giá trị của trường NOIGIAOHANG trong bảng DONDATHANG bằng địa chỉ của khách hàng đối với những đơn đặt hàng chưa xác định được nơi giao hàng (giá trị trường NOIGIAOHANG bằng NULL).
 BEGIN TRANSACTION;
-UPDATE ddh SET NOIGIAOHANG = kh.DIACHI
-FROM DONDATHANG ddh JOIN KHACHHANG kh ON ddh.MAKHACHHANG = kh.MAKHACHHANG
-WHERE ddh.NOIGIAOHANG IS NULL; 
+UPDATE DDH SET NOIGIAOHANG = KH.DIACHI
+FROM DONDATHANG DDH JOIN KHACHHANG KH ON ddh.MAKHACHHANG = KH.MAKHACHHANG
+WHERE DDH.NOIGIAOHANG IS NULL; 
 SELECT * FROM DONDATHANG;
 ROLLBACK;
 
--- 33. Cập nhật lại dữ liệu trong bảng KHACHHANG sao cho nếu tên công ty và tên giao dịch của khách hàng trùng với tên công ty và tên giao dịch của một nhà cụng cấp nào đó thi địa chỉ, điện thoại, fax và e-mail phải giống nhau
+-- 33. Cập nhật lại dữ liệu trong bảng KHACHHANG sao cho nếu tên công ty và tên giao dịch của khách hàng trùng với tên công ty và tên giao dịch của một nhà cụng cấp nào đó thi địa chỉ, điện thoại, fax và e-mail phải giống nhau.
 BEGIN TRANSACTION;
-UPDATE kh
-SET kh.DIACHI = ncc.DIACHI, kh.DIENTHOAI = ncc.DIENTHOAI, kh.FAX = ncc.FAX, kh.EMAIL = ncc.EMAIL
-FROM KHACHHANG kh JOIN NHACUNGCAP ncc ON kh.TENGIAODICH = ncc.TENGIAODICH 
-     AND kh.TENCONGTY = ncc.TENCONGTY; 
+UPDATE KH
+SET KH.DIACHI = NCC.DIACHI, KH.DIENTHOAI = NCC.DIENTHOAI, KH.FAX = NCC.FAX, KH.EMAIL = NCC.EMAIL
+FROM KHACHHANG KH JOIN NHACUNGCAP NCC ON KH.TENGIAODICH = NCC.TENGIAODICH 
+     AND KH.TENCONGTY = NCC.TENCONGTY; 
 SELECT * FROM KHACHHANG;
 ROLLBACK;
 
--- 34. Tăng lương lên gấp rưỡi cho những nhân viên bán dược số lượng hàng nhiều hơn 100 trong năm 2025
+-- 34. Tăng lương lên gấp rưỡi cho những nhân viên bán dược số lượng hàng nhiều hơn 100 trong năm 2025.
 BEGIN TRANSACTION;
 UPDATE NHANVIEN SET LUONGCOBAN = LUONGCOBAN * 1.5
 WHERE MANHANVIEN IN (
-    SELECT ddh.MANHANVIEN FROM DONDATHANG ddh
-    JOIN CTDATHANG ct ON ddh.SOHOADON = ct.SOHOADON
-    WHERE YEAR(ddh.NGAYDATHANG) = 2025
-    GROUP BY ddh.MANHANVIEN HAVING SUM(ct.SOLUONG) > 100
+    SELECT DDH.MANHANVIEN FROM DONDATHANG DDH
+    JOIN CTDATHANG CT ON DDH.SOHOADON = CT.SOHOADON
+    WHERE YEAR(DDH.NGAYDATHANG) = 2025
+    GROUP BY DDH.MANHANVIEN HAVING SUM(CT.SOLUONG) > 100
 ); 
 SELECT * FROM NHANVIEN;
 ROLLBACK;
 
--- 35. Tăng phụ cấp lên bằng 50% lương cho những nhân viên bán được hàng nhiều nhất
+-- 35. Tăng phụ cấp lên bằng 50% lương cho những nhân viên bán được hàng nhiều nhất.
 BEGIN TRANSACTION;
 UPDATE NHANVIEN SET PHUCAP = LUONGCOBAN * 0.5
 WHERE MANHANVIEN IN (
-    SELECT TOP 1 WITH TIES ddh.MANHANVIEN FROM DONDATHANG ddh
-    JOIN CTDATHANG ct ON ddh.SOHOADON = ct.SOHOADON
-    GROUP BY ddh.MANHANVIEN ORDER BY SUM(ct.SOLUONG) DESC
+    SELECT TOP 1 WITH TIES DDH.MANHANVIEN FROM DONDATHANG DDH
+    JOIN CTDATHANG CT ON ddh.SOHOADON = CT.SOHOADON
+    GROUP BY DDH.MANHANVIEN ORDER BY SUM(CT.SOLUONG) DESC
 ); 
 SELECT * FROM NHANVIEN;
 ROLLBACK;
 
--- 36. Giảm 25% lương của những nhân viên trong năm 2025 không lập được bất kỳ đơn đặt hàng nào
+-- 36. Giảm 25% lương của những nhân viên trong năm 2025 không lập được bất kỳ đơn đặt hàng nào.
 BEGIN TRANSACTION;
 UPDATE NHANVIEN SET LUONGCOBAN = LUONGCOBAN * 0.75
 WHERE MANHANVIEN NOT IN (SELECT MANHANVIEN FROM DONDATHANG WHERE YEAR(NGAYDATHANG) = 2025); 
 SELECT * FROM NHANVIEN;
 ROLLBACK;
 
--- 37. Giả sử trong bảng DONDATHANG có thêm trường SOTIEN cho biết số tiền mà khách hàng phải trả cho mỗi đơn đặt hàng. Hãy tính giá trị cho trường này
+-- 37. Giả sử trong bảng DONDATHANG có thêm trường SOTIEN cho biết số tiền mà khách hàng phải trả cho mỗi đơn đặt hàng. Hãy tính giá trị cho trường này.
 BEGIN TRANSACTION;
 -- Bước 1: Thêm cột nếu chưa có
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('DONDATHANG') AND name = 'SOTIEN')
     ALTER TABLE DONDATHANG ADD SOTIEN money;
 -- Bước 2: Cập nhật giá trị
-UPDATE ddh SET SOTIEN = (SELECT SUM(SOLUONG * GIABAN * (1 - MUCGIAMGIA)) FROM CTDATHANG ct WHERE ct.SOHOADON = ddh.SOHOADON)
-FROM DONDATHANG ddh; 
+UPDATE DDH SET SOTIEN = (SELECT SUM(SOLUONG * GIABAN * (1 - MUCGIAMGIA)) FROM CTDATHANG CT WHERE CT.SOHOADON = DDH.SOHOADON)
+FROM DONDATHANG DDH; 
 SELECT SOHOADON, SOTIEN FROM DONDATHANG;
 ROLLBACK;
 
--- 38. Xoá khỏi bảng NHANVIEN những nhân viên đã làm việc trong công ty quá 40 năm
+-- 38. Xoá khỏi bảng NHANVIEN những nhân viên đã làm việc trong công ty quá 40 năm.
 BEGIN TRANSACTION;
 DELETE FROM NHANVIEN WHERE DATEDIFF(year, NGAYLAMVIEC, GETDATE()) > 40; 
 SELECT * FROM NHANVIEN;
 ROLLBACK;
 
--- 39. Xoá khỏi bảng KHACHHANG những khách hàng hiện không có bất kỳ đơn đặt hàng nào cho công ty
+-- 39. Xoá khỏi bảng KHACHHANG những khách hàng hiện không có bất kỳ đơn đặt hàng nào cho công ty.
 BEGIN TRANSACTION;
 DELETE FROM KHACHHANG WHERE MAKHACHHANG NOT IN (SELECT MAKHACHHANG FROM DONDATHANG); 
 SELECT * FROM KHACHHANG;
 ROLLBACK;
 
--- 40. Xoá khỏi bảng MATHANG những mặt hàng có số lượng bằng 0 và không được đặt mu trong bất kỳ đơn đặt hàng nào
+-- 40. Xoá khỏi bảng MATHANG những mặt hàng có số lượng bằng 0 và không được đặt mu trong bất kỳ đơn đặt hàng nào.
 BEGIN TRANSACTION;
 DELETE FROM MATHANG WHERE SOLUONG = 0 AND MAHANG NOT IN (SELECT MAHANG FROM CTDATHANG); 
 SELECT * FROM MATHANG;
@@ -496,7 +466,7 @@ ROLLBACK;
 3. Viết hàm trả về một bảng trong đó cho biết tổng số lượng hàng bán được của mỗi mặt hàng. Sử dụng hàm này để thống kê xem tổng số lượng hàng (hiện có và đã bán) của mỗi mặt hàng là bao nhiêu
 
 4. Viết trigger cho bảng CHITIETDATHANG theo yêu cầu sau:
-Khi mộtt bản ghi mới được bổ sung vào bảng này thì giảm số lượng hàng hiện có nếu sản lượng hàng hiện có lớn hơn hoặc bằng số lượng hàng được bán ra. 
+Khi một bản ghi mới được bổ sung vào bảng này thì giảm số lượng hàng hiện có nếu sản lượng hàng hiện có lớn hơn hoặc bằng số lượng hàng được bán ra. 
 Ngược lại thì huỷ bỏ thao tác bổ sung.
 Khi cập nhật lại số lượng hàng được bán, kiểm tra số lượng hàng được cập nhật lại có phù hợp hay không (số lượng hàng bán ra không được vượt quá số lượng hàng hiện có và không được nhỏ hơn 1). 
 Nếu dữ liệu hợp lệ thì giảm (hoặc tăng) số lượng hàng hiện có trong công ty, ngược lại thì huỷ bỏ thao tác cập nhật
